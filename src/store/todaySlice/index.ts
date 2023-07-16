@@ -26,7 +26,6 @@ const todaySlice = createSlice({
       state.todays.push(action.payload);
     },
     updateToday: (state, action: PayloadAction<Today>) => {
-      console.log("test");
       const { todayId, title, description, status } = action.payload;
       const index = state.todays.findIndex(
         (today) => today.todayId === todayId
