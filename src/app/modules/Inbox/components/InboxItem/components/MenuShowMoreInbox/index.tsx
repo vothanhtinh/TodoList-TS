@@ -23,16 +23,16 @@ import { deleteInbox } from "store/inboxSlice";
 interface TaskItemProps {
   title: string;
   description: string;
-  id: string;
+  inboxId: string;
   status: number;
 }
 export const MenuShowMoreInbox: React.FC<TaskItemProps> = (props) => {
-  const { title, description, id, status } = props;
+  const { title, description, inboxId, status } = props;
 
   const dispatch = useAppDispatch();
 
   const onClickDeleteInbox = () => {
-    dispatch(deleteInbox({ title, description, id, status }));
+    dispatch(deleteInbox({ title, description, inboxId, status }));
   };
   return (
     <PaperStyle>

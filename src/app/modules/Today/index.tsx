@@ -2,7 +2,7 @@
 import { CalendarViewDayOutlined } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 // Components
@@ -21,13 +21,18 @@ import {
 
 // Store
 import { selectTodays } from "store/todaySlice/todaySlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getTodays } from "constants/todayActionType";
 
 const ToDay: React.FC = () => {
+  const dispatch = useDispatch();
   const [isClickAddTask, setIsClickAddTask] = useState(false);
 
+  useEffect(() => {
+    dispatch(getTodays());
+  }, []);
   // get today from store
-  const todays = useSelector(selectTodays).filter(
+  const todays = useSelector(selectTodays)?.filter(
     (today) => today.status === 0
   );
 
@@ -54,8 +59,8 @@ const ToDay: React.FC = () => {
         {todays.map((today) => (
           <TodayItem
             title={today.title}
-            key={today.id}
-            id={today.id}
+            key={today.todayId}
+            todayId={today.todayId}
             description={today.description}
             status={today.status}
           />

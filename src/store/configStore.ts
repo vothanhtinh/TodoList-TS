@@ -1,9 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
+import createSagaMiddleware from "redux-saga";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 
 //reducer
 import inboxSlice from "./inboxSlice/index";
 import todaySlice from "./todaySlice";
+import rootSaga from "./rootSaga";
+
+// create the saga middleware
+const sagaMiddleware = createSagaMiddleware();
+
 // Định nghĩa RootState để sử dụng trong useSelector
 export type RootState = ReturnType<typeof store.getState>;
 
@@ -17,4 +23,9 @@ export const store = configureStore({
     inboxReducer: inboxSlice,
     todayReducer: todaySlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(sagaMiddleware),
 });
+
+// then run the saga
+sagaMiddleware.run(rootSaga);

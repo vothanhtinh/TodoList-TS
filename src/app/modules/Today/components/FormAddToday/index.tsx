@@ -27,13 +27,13 @@ import {
 
 // Store
 import { useAppDispatch } from "store/configStore";
-import { addToday, updateToday } from "store/todaySlice";
+import { addToday, updateToday } from "constants/todayActionType";
 
 interface TaskProps {
   task?: boolean;
   onCancel: () => void;
   initialTask?: {
-    id: string;
+    todayId: string;
     title: string;
     description: string;
     status: number;
@@ -73,7 +73,7 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
     if (initialTask) {
       // Update existing task
       const updatedToday = {
-        id: initialTask.id,
+        todayId: initialTask.todayId,
         title: taskName,
         description: description,
         status: initialTask.status,
@@ -83,7 +83,7 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
     } else {
       // Add new task
       const newToday = {
-        id: uuidv4(),
+        todayId: uuidv4(),
         title: taskName,
         description: description,
         status: 0,

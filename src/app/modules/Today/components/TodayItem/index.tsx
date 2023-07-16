@@ -18,13 +18,13 @@ import { MenuShowMoreToday } from "./components/MenuShowMoreToday";
 interface TaskItemProps {
   title: string;
   description: string;
-  id: string;
+  todayId: string;
   status: number;
 }
 
 export const TodayItem: React.FC<TaskItemProps> = (props) => {
   const [isEdit, setIsEdit] = useState(true);
-  const { title, description, id, status } = props;
+  const { title, description, todayId, status } = props;
   const [isShowMore, setIsShowMore] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -58,7 +58,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
               <ButtonIcon iconStart={AppsIcon} />
             </div>
             <Checkbox
-              id={id}
+              id={todayId}
               title={title}
               status={status}
               description={description}
@@ -69,7 +69,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
           <RightStyle className={`hide ${isHovered ? "show" : ""}`}>
             {!isShowMore && (
               <>
-                <span onClick={() => ClickEdit(id)}>
+                <span onClick={() => ClickEdit(todayId)}>
                   <ButtonIcon iconStart={BorderColorIcon} />
                 </span>
                 <ButtonIcon iconStart={CalendarTodayIcon} />
@@ -86,7 +86,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
                   title={title}
                   description={description}
                   status={status}
-                  id={id}
+                  todayId={todayId}
                 />
               </span>
             )}
@@ -96,7 +96,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
         <FormAddToday
           onCancel={onCancel}
           initialTask={{
-            id,
+            todayId,
             description,
             title,
             status,

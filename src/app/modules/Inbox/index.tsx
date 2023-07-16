@@ -1,5 +1,5 @@
 // Libraries
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
@@ -25,16 +25,28 @@ import {
 } from "./styled";
 
 // Store
+import { useAppDispatch } from "store/configStore";
 import { selectInboxs } from "store/inboxSlice/selector";
 
 // Components
 import { InboxItem } from "app/modules/Inbox/components/InboxItem";
 
+import { getInboxs } from "constants/inboxActionType";
+
 const Inbox: React.FC = React.memo(() => {
+  const dispatch = useAppDispatch();
+
   const [isAddTask, setIsAddTask] = useState(false);
 
+  useEffect(() => {
+    console.log("useEffect");
+    dispatch(getInboxs());
+  }, []);
+
   // get inbox from store
-  const inboxs = useSelector(selectInboxs);
+  const inboxs = useSelector(selectInboxs)?.filter(
+    (inbox) => inbox.status === 0
+  );
 
   const onClickAdd = () => {
     setIsAddTask(true);
@@ -57,11 +69,11 @@ const Inbox: React.FC = React.memo(() => {
         </InboxTitle>
         {inboxs.map((inbox) => (
           <InboxItem
-            key={inbox.id}
+            key={inbox.inboxId}
             title={inbox.title}
             description={inbox.description}
             status={inbox.status}
-            id={inbox.id}
+            inboxId={inbox.inboxId}
           />
         ))}
         <AddTask
