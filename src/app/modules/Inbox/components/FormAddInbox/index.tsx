@@ -27,11 +27,13 @@ import {
 
 // Store
 import { useAppDispatch } from "store/configStore";
+
+//Actions
 import { addInbox, updateInbox } from "constants/inboxActionType";
 
 interface TaskProps {
   task?: boolean;
-  onCancel: () => void;
+  onCancelForm: () => void;
   initialTask?: {
     inboxId: string;
     title: string;
@@ -40,7 +42,7 @@ interface TaskProps {
   };
 }
 
-const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
+const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
   const dispatch = useAppDispatch();
 
   const [taskName, setTaskName] = useState("");
@@ -68,7 +70,7 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
   const handleCancel = () => {
     setTaskName("");
     setDescription("");
-    onCancel();
+    onCancelForm();
   };
 
   const handleAddTask = () => {
@@ -97,7 +99,7 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
     // Reset the form
     setTaskName("");
     setDescription("");
-    onCancel();
+    onCancelForm();
   };
 
   return (

@@ -30,6 +30,7 @@ interface TaskItemProps {
 
 export const MenuShowMoreToday: React.FC<TaskItemProps> = (props) => {
   const { title, description, todayId, status } = props;
+
   const dispatch = useAppDispatch();
   const ClickDeleteToday = () => {
     dispatch(deleteToday({ title, description, todayId, status }));

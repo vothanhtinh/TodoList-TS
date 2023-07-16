@@ -5,6 +5,13 @@ const UPDATE_INBOX = "updateInbox";
 const DELETE_INBOX = "deleteInbox";
 const CHANGE_STATUS_INBOX = "changeStatusInbox";
 
+// Types
+const TYPE_GET_INBOXS = "inbox/getInboxs";
+const TYPE_ADD_INBOX = "inbox/addInbox";
+const TYPE_UPDATE_INBOX = "inbox/updateInbox";
+const TYPE_DELETE_INBOX = "inbox/deleteInbox";
+const TYPE_CHANGE_STATUS_INBOX = "inbox/changeStatusInbox";
+
 export interface Inbox {
   inboxId: string;
   title: string;
@@ -40,6 +47,11 @@ export {
   DELETE_INBOX,
   UPDATE_INBOX,
   CHANGE_STATUS_INBOX,
+  TYPE_GET_INBOXS,
+  TYPE_ADD_INBOX,
+  TYPE_DELETE_INBOX,
+  TYPE_UPDATE_INBOX,
+  TYPE_CHANGE_STATUS_INBOX,
   getInboxs,
   addInbox,
   updateInbox,

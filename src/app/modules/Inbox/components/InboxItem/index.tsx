@@ -104,7 +104,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
         </BlockStyle>
       ) : (
         <FormAddInbox
-          onCancel={onCancel}
+          onCancelForm={onCancel}
           initialTask={{
             inboxId,
             description,

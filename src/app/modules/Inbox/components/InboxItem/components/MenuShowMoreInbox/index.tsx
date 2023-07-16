@@ -18,7 +18,9 @@ import { MenuIconItem } from "app/components/atoms/MenuIconItem";
 
 // Store
 import { useAppDispatch } from "store/configStore";
-import { deleteInbox } from "store/inboxSlice";
+
+// Actions
+import { deleteInbox } from "constants/inboxActionType";
 
 interface TaskItemProps {
   title: string;

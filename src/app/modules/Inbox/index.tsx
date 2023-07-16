@@ -48,11 +48,11 @@ const Inbox: React.FC = React.memo(() => {
     (inbox) => inbox.status === 0
   );
 
-  const onClickAdd = () => {
+  const onClickAddInbox = () => {
     setIsAddTask(true);
   };
 
-  const onClickCancel = () => {
+  const onClickCancelInbox = () => {
     setIsAddTask(false);
   };
 
@@ -77,9 +77,9 @@ const Inbox: React.FC = React.memo(() => {
           />
         ))}
         <AddTask
-          clickAddTask={isAddTask}
-          onClickAdd={onClickAdd}
-          onClickCancel={onClickCancel}
+          isClickAddTask={isAddTask}
+          onClickAddTask={onClickAddInbox}
+          onClickCancelTask={onClickCancelInbox}
         />
         <AddSection />
         {inboxs.length === 0 && !isAddTask && (

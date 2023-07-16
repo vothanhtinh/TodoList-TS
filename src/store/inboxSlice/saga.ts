@@ -1,19 +1,28 @@
+// Libaries
 import { AxiosResponse } from "axios";
 import { call, put, takeEvery } from "redux-saga/effects";
 
+// Apis
 import { createT, getT, removeT, updateT } from "configs/api";
+
+// Constants
 import {
   ADD_INBOX,
   CHANGE_STATUS_INBOX,
   DELETE_INBOX,
   GET_INBOXS,
+  TYPE_ADD_INBOX,
+  TYPE_CHANGE_STATUS_INBOX,
+  TYPE_DELETE_INBOX,
+  TYPE_GET_INBOXS,
+  TYPE_UPDATE_INBOX,
   UPDATE_INBOX,
 } from "constants/inboxActionType";
 
 function* fetchInboxs() {
   try {
     const response: AxiosResponse = yield call(getT, "/inbox/");
-    yield put({ type: "inbox/getInboxs", payload: response.data });
+    yield put({ type: TYPE_GET_INBOXS, payload: response.data });
   } catch (error) {
     // Handle error
   }
@@ -26,14 +35,13 @@ function* createInbox(action: any) {
       "/inbox",
       action.payload
     );
-    yield put({ type: "inbox/addinbox", payload: response.data });
+    yield put({ type: TYPE_ADD_INBOX, payload: response.data });
   } catch (error) {
     // Handle error
   }
 }
 
 function* getInboxById(action: any) {
-  console.log("id", action.inboxId);
   try {
     const response: AxiosResponse = yield call(
       getT,
@@ -54,7 +62,7 @@ function* updateInbox(action: any) {
       `/inbox/${id}`,
       action.payload
     );
-    yield put({ type: "inbox/updateInbox", payload: response.data });
+    yield put({ type: TYPE_UPDATE_INBOX, payload: response.data });
   } catch (error) {}
 }
 
@@ -67,8 +75,7 @@ function* deleteInbox(action: any) {
       `/inbox/${id}`,
       action.payload
     );
-    yield put({ type: "inbox/deleteInbox", payload: response.data });
-    console.log(response.data);
+    yield put({ type: TYPE_DELETE_INBOX, payload: response.data });
   } catch (error) {}
 }
 
@@ -81,7 +88,7 @@ function* changeStatusInbox(action: any) {
       `/inbox/${id}`,
       action.payload
     );
-    yield put({ type: "inbox/updateInbox", payload: response.data });
+    yield put({ type: TYPE_CHANGE_STATUS_INBOX, payload: response.data });
   } catch (error) {}
 }
 function* watchInboxs() {

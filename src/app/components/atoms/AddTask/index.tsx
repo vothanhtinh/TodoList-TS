@@ -10,28 +10,28 @@ import FormAddInbox from "../../../modules/Inbox/components/FormAddInbox";
 import { StyleButton, StyleIcon, Text } from "./styled";
 
 interface AddTaskProps {
-  clickAddTask: boolean;
-  onClickAdd: () => void;
-  onClickCancel: () => void;
+  isClickAddTask: boolean;
+  onClickAddTask: () => void;
+  onClickCancelTask: () => void;
 }
 
 const AddTask: React.FC<AddTaskProps> = (props) => {
-  const { clickAddTask, onClickAdd, onClickCancel } = props;
+  const { isClickAddTask, onClickAddTask, onClickCancelTask } = props;
   const [task, setTask] = useState(false);
 
   const handleTask = () => {
-    onClickAdd();
+    onClickAddTask();
     setTask(true);
   };
 
   const handleCancel = () => {
-    onClickCancel();
+    onClickCancelTask();
     setTask(false);
   };
 
   return (
     <>
-      {!clickAddTask ? (
+      {!isClickAddTask ? (
         <StyleButton onClick={handleTask}>
           <StyleIcon>
             <FontAwesomeIcon icon={faPlus} />
@@ -39,7 +39,7 @@ const AddTask: React.FC<AddTaskProps> = (props) => {
           <Text>Add task</Text>
         </StyleButton>
       ) : (
-        <FormAddInbox task={task} onCancel={handleCancel} />
+        <FormAddInbox task={task} onCancelForm={handleCancel} />
       )}
     </>
   );

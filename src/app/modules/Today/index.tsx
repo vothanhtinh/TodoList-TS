@@ -22,6 +22,8 @@ import {
 // Store
 import { selectTodays } from "store/todaySlice/todaySlice";
 import { useDispatch, useSelector } from "react-redux";
+
+// Actions
 import { getTodays } from "constants/todayActionType";
 
 const ToDay: React.FC = () => {
@@ -31,16 +33,17 @@ const ToDay: React.FC = () => {
   useEffect(() => {
     dispatch(getTodays());
   }, []);
+
   // get today from store
   const todays = useSelector(selectTodays)?.filter(
     (today) => today.status === 0
   );
 
-  const ClickAdd = () => {
+  const ClickAddToday = () => {
     setIsClickAddTask(true);
   };
 
-  const ClickCancel = () => {
+  const ClickCancelToday = () => {
     setIsClickAddTask(false);
   };
 
@@ -66,9 +69,9 @@ const ToDay: React.FC = () => {
           />
         ))}
         <AddTaskToday
-          clickAddTask={isClickAddTask}
-          ClickAdd={ClickAdd}
-          ClickCancel={ClickCancel}
+          isClickAddTask={isClickAddTask}
+          ClickAddTask={ClickAddToday}
+          ClickCancelTask={ClickCancelToday}
         />
         {todays.length === 0 && !isClickAddTask && (
           <>
