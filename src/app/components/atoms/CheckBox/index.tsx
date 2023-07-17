@@ -22,7 +22,7 @@ interface CheckBoxProps {
 export const Checkbox: React.FC<CheckBoxProps> = (props) => {
   const dispatch = useAppDispatch();
 
-  const { id, status, type, description, title, typeId } = props;
+  const { id, type, description, title, typeId } = props;
   const todayId = typeId;
   const inboxId = typeId;
   const ChangeStatus = () => {

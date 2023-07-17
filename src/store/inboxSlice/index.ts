@@ -27,25 +27,23 @@ const inboxSlice = createSlice({
       state.inboxs.push(action.payload);
     },
     updateInbox: (state, action: PayloadAction<Inbox>) => {
-      const { inboxId, title, description, status } = action.payload;
+      const { inboxId } = action.payload;
       const index = state.inboxs.findIndex(
         (inbox) => inbox.inboxId === inboxId
       );
       if (index !== -1) {
-        state.inboxs[index] = { inboxId, title, description, status };
+        state.inboxs[index] = action.payload;
       }
     },
-
     changeStatusInbox: (state, action: PayloadAction<Inbox>) => {
-      const { inboxId, title, description } = action.payload;
+      const { inboxId } = action.payload;
       const index = state.inboxs.findIndex(
         (inbox) => inbox.inboxId === inboxId
       );
       if (index !== -1) {
-        state.inboxs[index] = { inboxId, title, description, status: 1 };
+        state.inboxs[index].status = 1;
       }
     },
-
     deleteInbox: (state, action: PayloadAction<Inbox>) => {
       const { inboxId } = action.payload;
       state.inboxs = state.inboxs.filter((inbox) => inbox.inboxId !== inboxId);

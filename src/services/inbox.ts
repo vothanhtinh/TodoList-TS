@@ -1,6 +1,6 @@
-import { createTodo, deleteTodo, getTodo, updateTodo } from "./api";
+import { create, remove, get, update } from "./api";
 
-const pathUrl = "/todo/";
+const pathUrl = "/inbox/";
 
 type TCreateInboxData = {
   id?: string;
@@ -12,7 +12,7 @@ type TCreateInboxData = {
 
 export const getInboxs = async () => {
   try {
-    const results = await getTodo(pathUrl);
+    const results = await get(pathUrl);
 
     return results;
   } catch (error) {
@@ -22,7 +22,7 @@ export const getInboxs = async () => {
 
 export const createInbox = async (data: Partial<TCreateInboxData>) => {
   try {
-    const results = await createTodo(pathUrl, data);
+    const results = await create(pathUrl, data);
     return results;
   } catch (error) {
     console.log(error);
@@ -31,7 +31,7 @@ export const createInbox = async (data: Partial<TCreateInboxData>) => {
 
 export const updateInbox = async (data: TCreateInboxData) => {
   try {
-    const results = await updateTodo(`${pathUrl}${data.id}`, data);
+    const results = await update(`${pathUrl}${data.id}`, data);
     return results;
   } catch (error) {
     console.log(error);
@@ -40,7 +40,7 @@ export const updateInbox = async (data: TCreateInboxData) => {
 
 export const deleteInbox = async (data: TCreateInboxData) => {
   try {
-    const results = await deleteTodo(`${pathUrl}${data.id}`);
+    const results = await remove(`${pathUrl}${data.id}`);
 
     return results;
   } catch (error) {
@@ -50,7 +50,7 @@ export const deleteInbox = async (data: TCreateInboxData) => {
 
 export const changeStatusInbox = async (data: TCreateInboxData) => {
   try {
-    const results = await updateTodo(`${pathUrl}${data.id}`, data);
+    const results = await update(`${pathUrl}${data.id}`, data);
     return results;
   } catch (error) {
     console.log(error);

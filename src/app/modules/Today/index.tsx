@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 // Components
 import EmtyState from "app/components/atoms/EmtyState";
@@ -36,7 +37,7 @@ const ToDay: React.FC = () => {
 
   // get today from store
   const todays = useSelector(selectTodays)?.filter(
-    (today) => today?.status == 0
+    (today) => today?.status === 0
   );
 
   const ClickAddToday = () => {
@@ -59,6 +60,7 @@ const ToDay: React.FC = () => {
             <GroupIcon startIcon={<CalendarViewDayOutlined />}>View</GroupIcon>
           </div>
         </InboxTitle>
+
         {todays.map((today) => (
           <TodayItem
             title={today.title}

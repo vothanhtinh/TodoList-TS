@@ -15,14 +15,14 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export const getTodo = <T>(
+export const get = <T>(
   url: string,
   config?: AxiosRequestConfig
 ): Promise<AxiosResponse<T>> => {
   return axiosInstance.get<T>(url, config);
 };
 
-export const createTodo = <T>(
+export const create = <T>(
   url: string,
   data?: any,
   config?: AxiosRequestConfig
@@ -30,7 +30,7 @@ export const createTodo = <T>(
   return axiosInstance.post<T>(url, data, config);
 };
 
-export const updateTodo = <T>(
+export const update = <T>(
   url: string,
   data?: any,
   config?: AxiosRequestConfig
@@ -38,7 +38,7 @@ export const updateTodo = <T>(
   return axiosInstance.put<T>(url, data, config);
 };
 
-export const deleteTodo = <T>(
+export const remove = <T>(
   url: string,
   config?: AxiosRequestConfig
 ): Promise<AxiosResponse<T>> => {

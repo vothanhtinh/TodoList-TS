@@ -60,7 +60,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
             {!isShowMore && (
               <div
                 className={`hide ${isHovered ? "show" : ""}`}
-                style={{ marginLeft: "-30px" }}
+                style={{ marginLeft: "-32px" }}
               >
                 <ButtonIcon iconStart={AppsIcon} />
               </div>

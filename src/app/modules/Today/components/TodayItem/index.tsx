@@ -55,7 +55,10 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
           onMouseLeave={handleMouseLeave}
         >
           <LeftStyle>
-            <div className={`hide ${isHovered ? "show" : ""}`}>
+            <div
+              className={`hide ${isHovered ? "show" : ""}`}
+              style={{ marginLeft: "-32px" }}
+            >
               <ButtonIcon iconStart={AppsIcon} />
             </div>
             <Checkbox

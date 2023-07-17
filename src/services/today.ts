@@ -1,4 +1,4 @@
-import { createTodo, deleteTodo, getTodo, updateTodo } from "./api";
+import { create, remove, get, update } from "./api";
 
 const pathUrl = "/todo/";
 
@@ -12,7 +12,7 @@ type TCreateTodayData = {
 
 export const getToday = async () => {
   try {
-    const results = await getTodo(pathUrl);
+    const results = await get(pathUrl);
 
     return results;
   } catch (error) {
@@ -22,7 +22,7 @@ export const getToday = async () => {
 
 export const createToday = async (data: Partial<TCreateTodayData>) => {
   try {
-    const results = await createTodo(pathUrl, data);
+    const results = await create(pathUrl, data);
     return results;
   } catch (error) {
     console.log(error);
@@ -31,7 +31,7 @@ export const createToday = async (data: Partial<TCreateTodayData>) => {
 
 export const updateToday = async (data: TCreateTodayData) => {
   try {
-    const results = await updateTodo(`${pathUrl}${data.id}`, data);
+    const results = await update(`${pathUrl}${data.id}`, data);
     return results;
   } catch (error) {
     console.log(error);
@@ -40,7 +40,7 @@ export const updateToday = async (data: TCreateTodayData) => {
 
 export const deleteToday = async (data: TCreateTodayData) => {
   try {
-    const results = await deleteTodo(`${pathUrl}${data.id}`);
+    const results = await remove(`${pathUrl}${data.id}`);
 
     return results;
   } catch (error) {
@@ -50,7 +50,7 @@ export const deleteToday = async (data: TCreateTodayData) => {
 
 export const changeStatusToday = async (data: TCreateTodayData) => {
   try {
-    const results = await updateTodo(`${pathUrl}${data.id}`, data);
+    const results = await update(`${pathUrl}${data.id}`, data);
     return results;
   } catch (error) {
     console.log(error);

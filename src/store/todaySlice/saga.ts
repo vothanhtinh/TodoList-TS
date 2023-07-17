@@ -1,8 +1,6 @@
+//Libraries
 import { AxiosResponse } from "axios";
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
-
-// Apis
-import { createT, getT, removeT, updateT } from "configs/api";
 
 // Constants
 import {
