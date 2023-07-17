@@ -16,6 +16,7 @@ import { BlockStyle, LeftStyle, RightStyle } from "./styled";
 import { MenuShowMoreToday } from "./components/MenuShowMoreToday";
 
 interface TaskItemProps {
+  id?: string;
   title: string;
   description: string;
   todayId: string;
@@ -24,7 +25,7 @@ interface TaskItemProps {
 
 export const TodayItem: React.FC<TaskItemProps> = (props) => {
   const [isEdit, setIsEdit] = useState(true);
-  const { title, description, todayId, status } = props;
+  const { title, description, todayId, status, id } = props;
   const [isShowMore, setIsShowMore] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -58,10 +59,11 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
               <ButtonIcon iconStart={AppsIcon} />
             </div>
             <Checkbox
-              id={todayId}
-              title={title}
+              id={id}
               status={status}
+              typeId={todayId}
               description={description}
+              title={title}
               type="today"
             />
             <span>{title}</span>
@@ -83,6 +85,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
               <span onClick={ClickShowMore}>
                 <ButtonIcon iconStart={MoreHorizIcon} />
                 <MenuShowMoreToday
+                  id={id}
                   title={title}
                   description={description}
                   status={status}
@@ -96,6 +99,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
         <FormAddToday
           onCancel={onCancel}
           initialTask={{
+            id,
             todayId,
             description,
             title,

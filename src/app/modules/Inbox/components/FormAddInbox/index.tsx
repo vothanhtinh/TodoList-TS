@@ -29,12 +29,13 @@ import {
 import { useAppDispatch } from "store/configStore";
 
 //Actions
-import { addInbox, updateInbox } from "constants/inboxActionType";
+import { addInbox, updateInbox } from "store/inboxSlice/inboxAction";
 
 interface TaskProps {
   task?: boolean;
   onCancelForm: () => void;
   initialTask?: {
+    id?: string;
     inboxId: string;
     title: string;
     description: string;
@@ -76,14 +77,15 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
   const handleAddTask = () => {
     if (initialTask) {
       // Update existing task
-      const updatedToday = {
+      const updatedInbox = {
+        id: initialTask.id,
         inboxId: initialTask.inboxId,
         title: taskName,
         description: description,
         status: initialTask.status,
       };
 
-      dispatch(updateInbox(updatedToday));
+      dispatch(updateInbox(updatedInbox));
     } else {
       // Add new task
       const newInbox = {

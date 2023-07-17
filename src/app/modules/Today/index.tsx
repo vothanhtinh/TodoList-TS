@@ -24,7 +24,7 @@ import { selectTodays } from "store/todaySlice/todaySlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // Actions
-import { getTodays } from "constants/todayActionType";
+import { getTodays } from "store/todaySlice/todayAction";
 
 const ToDay: React.FC = () => {
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const ToDay: React.FC = () => {
 
   // get today from store
   const todays = useSelector(selectTodays)?.filter(
-    (today) => today.status === 0
+    (today) => today?.status == 0
   );
 
   const ClickAddToday = () => {
@@ -66,6 +66,7 @@ const ToDay: React.FC = () => {
             todayId={today.todayId}
             description={today.description}
             status={today.status}
+            id={today.id}
           />
         ))}
         <AddTaskToday

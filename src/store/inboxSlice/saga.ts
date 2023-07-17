@@ -1,114 +1,95 @@
-// Libaries
 import { AxiosResponse } from "axios";
-import { call, put, takeEvery } from "redux-saga/effects";
+import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 
-// Apis
-import { createT, getT, removeT, updateT } from "configs/api";
+// Services
+import * as inboxServices from "services/inbox";
 
 // Constants
+
+import {
+  addInbox,
+  changeStatusInbox,
+  deleteInbox,
+  getInboxs,
+  updateInbox,
+} from ".";
 import {
   ADD_INBOX,
   CHANGE_STATUS_INBOX,
   DELETE_INBOX,
   GET_INBOXS,
-  TYPE_ADD_INBOX,
-  TYPE_CHANGE_STATUS_INBOX,
-  TYPE_DELETE_INBOX,
-  TYPE_GET_INBOXS,
-  TYPE_UPDATE_INBOX,
   UPDATE_INBOX,
-} from "constants/inboxActionType";
+} from "./inboxAction";
 
-function* fetchInboxs() {
+function* fetchInboxsSaga() {
   try {
-    const response: AxiosResponse = yield call(getT, "/inbox/");
-    yield put({ type: TYPE_GET_INBOXS, payload: response.data });
+    const response: AxiosResponse = yield call(inboxServices.getInboxs);
+    yield put(getInboxs(response.data));
   } catch (error) {
     // Handle error
   }
 }
 
-function* createInbox(action: any) {
+function* createInboxSaga(action: any) {
   try {
     const response: AxiosResponse = yield call(
-      createT,
-      "/inbox",
+      inboxServices.createInbox,
       action.payload
     );
-    yield put({ type: TYPE_ADD_INBOX, payload: response.data });
+    yield put(addInbox(response.data));
   } catch (error) {
     // Handle error
   }
 }
 
-function* getInboxById(action: any) {
+function* updateInboxSaga(action: any) {
   try {
     const response: AxiosResponse = yield call(
-      getT,
-      `/inbox/?inboxId=${action.inboxId}`
-    );
-    return response;
-  } catch (error) {
-    // Handle error
-  }
-}
-
-function* updateInbox(action: any) {
-  try {
-    const getData: AxiosResponse = yield call(getInboxById, action.payload);
-    const id = getData.data[0].id;
-    const response: AxiosResponse = yield call(
-      updateT,
-      `/inbox/${id}`,
+      inboxServices.updateInbox,
       action.payload
     );
-    yield put({ type: TYPE_UPDATE_INBOX, payload: response.data });
+    yield put(updateInbox(response.data));
   } catch (error) {}
 }
 
-function* deleteInbox(action: any) {
+function* deleteInboxSaga(action: any) {
   try {
-    const getData: AxiosResponse = yield call(getInboxById, action.payload);
-    const id = getData.data[0].id;
     const response: AxiosResponse = yield call(
-      removeT,
-      `/inbox/${id}`,
+      inboxServices.deleteInbox,
       action.payload
     );
-    yield put({ type: TYPE_DELETE_INBOX, payload: response.data });
+    yield put(deleteInbox(response.data));
   } catch (error) {}
 }
 
-function* changeStatusInbox(action: any) {
+function* changeStatusInboxSaga(action: any) {
   try {
-    const getData: AxiosResponse = yield call(getInboxById, action.payload);
-    const id = getData.data[0].id;
     const response: AxiosResponse = yield call(
-      updateT,
-      `/inbox/${id}`,
+      inboxServices.changeStatusInbox,
       action.payload
     );
-    yield put({ type: TYPE_CHANGE_STATUS_INBOX, payload: response.data });
+    yield put(changeStatusInbox(response.data));
   } catch (error) {}
 }
+
 function* watchInboxs() {
-  yield takeEvery(GET_INBOXS, fetchInboxs);
+  yield takeEvery(GET_INBOXS, fetchInboxsSaga);
 }
 
 function* watchAddInbox() {
-  yield takeEvery(ADD_INBOX, createInbox);
+  yield takeLatest(ADD_INBOX, createInboxSaga);
 }
 
 function* watchUpdateInbox() {
-  yield takeEvery(UPDATE_INBOX, updateInbox);
+  yield takeLatest(UPDATE_INBOX, updateInboxSaga);
 }
 
 function* watchDeleteInbox() {
-  yield takeEvery(DELETE_INBOX, deleteInbox);
+  yield takeLatest(DELETE_INBOX, deleteInboxSaga);
 }
 
 function* watchChangeStatusInbox() {
-  yield takeEvery(CHANGE_STATUS_INBOX, changeStatusInbox);
+  yield takeLatest(CHANGE_STATUS_INBOX, changeStatusInboxSaga);
 }
 
 export const inboxSaga = [

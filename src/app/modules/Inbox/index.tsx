@@ -31,7 +31,7 @@ import { selectInboxs } from "store/inboxSlice/selector";
 // Components
 import { InboxItem } from "app/modules/Inbox/components/InboxItem";
 
-import { getInboxs } from "constants/inboxActionType";
+import { getInboxs } from "store/inboxSlice/inboxAction";
 
 const Inbox: React.FC = React.memo(() => {
   const dispatch = useAppDispatch();
@@ -39,7 +39,6 @@ const Inbox: React.FC = React.memo(() => {
   const [isAddTask, setIsAddTask] = useState(false);
 
   useEffect(() => {
-    console.log("useEffect");
     dispatch(getInboxs());
   }, []);
 
@@ -74,6 +73,7 @@ const Inbox: React.FC = React.memo(() => {
             description={inbox.description}
             status={inbox.status}
             inboxId={inbox.inboxId}
+            id={inbox.id}
           />
         ))}
         <AddTask

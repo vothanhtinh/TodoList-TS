@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Today {
+  id?: string;
   todayId: string;
   description: string;
   title: string;
@@ -23,30 +24,32 @@ const todaySlice = createSlice({
       state.todays = action.payload;
     },
     addToday: (state, action: PayloadAction<Today>) => {
+      console.log("reducer", action);
       state.todays.push(action.payload);
     },
     updateToday: (state, action: PayloadAction<Today>) => {
-      const { todayId, title, description, status } = action.payload;
-      const index = state.todays.findIndex(
-        (today) => today.todayId === todayId
-      );
-      if (index !== -1) {
-        state.todays[index] = { todayId, title, description, status };
-      }
-    },
-
-    changeStatusToday: (state, action: PayloadAction<Today>) => {
-      const { todayId, title, description } = action.payload;
-      const index = state.todays.findIndex(
-        (today) => today.todayId === todayId
-      );
-      if (index !== -1) {
-        state.todays[index] = { todayId, title, description, status: 1 };
-      }
-    },
-
-    deleteToday: (state, action: PayloadAction<Today>) => {
       const { todayId } = action.payload;
+      const index = state.todays.findIndex(
+        (today) => today.todayId === todayId
+      );
+
+      if (index !== -1) {
+        state.todays[index] = action.payload;
+      }
+    },
+    changeStatusToday: (state, action: PayloadAction<Today>) => {
+      const { todayId } = action.payload;
+      const index = state.todays.findIndex(
+        (today) => today.todayId === todayId
+      );
+
+      if (index !== -1) {
+        state.todays[index].status = 1;
+      }
+    },
+    deleteToday: (state, action: PayloadAction<Partial<Today>>) => {
+      const { todayId } = action.payload;
+
       state.todays = state.todays.filter((today) => today.todayId !== todayId);
     },
   },
@@ -59,4 +62,5 @@ export const {
   deleteToday,
   changeStatusToday,
 } = todaySlice.actions;
+
 export default todaySlice.reducer;

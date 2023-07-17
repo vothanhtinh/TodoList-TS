@@ -29,6 +29,7 @@ export const FormInput = styled.input`
 export const ButtonGroupIcon = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   width: 100%;
   padding: 10px 0px;
   margin-left: 25px;

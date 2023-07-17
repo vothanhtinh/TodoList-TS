@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { call, put, takeEvery } from "redux-saga/effects";
+import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 
 // Apis
 import { createT, getT, removeT, updateT } from "configs/api";
@@ -10,104 +10,89 @@ import {
   CHANGE_STATUS_TODAY,
   DELETE_TODAY,
   GET_TODAYS,
-  TYPE_ADD_TODAY,
-  TYPE_DELETE_TODAY,
-  TYPE_GET_TODAYS,
-  TYPE_UPDATE_TODAY,
   UPDATE_TODAY,
-} from "constants/todayActionType";
+} from "store/todaySlice/todayAction";
+import {
+  addToday,
+  changeStatusToday,
+  deleteToday,
+  getTodays,
+  updateToday,
+} from ".";
 
-function* fetchTodays() {
+// Services
+import * as todayServices from "services/today";
+
+function* fetchTodaysSaga() {
   try {
-    const response: AxiosResponse = yield call(getT, "/todo/");
-    yield put({ type: TYPE_GET_TODAYS, payload: response.data });
+    const response: AxiosResponse = yield call(todayServices.getToday);
+    yield put(getTodays(response.data));
   } catch (error) {
     // Handle error
   }
 }
 
-function* createToday(action: any) {
+function* createTodaySaga(action: any) {
   try {
     const response: AxiosResponse = yield call(
-      createT,
-      "/todo",
+      todayServices.createToday,
       action.payload
     );
-    yield put({ type: TYPE_ADD_TODAY, payload: response.data });
+    yield put(addToday(response.data));
   } catch (error) {
     // Handle error
   }
 }
 
-function* getTodayById(action: any) {
+function* updateTodaySaga(action: any) {
   try {
     const response: AxiosResponse = yield call(
-      getT,
-      `/todo/?todayId=${action.todayId}`
-    );
-    return response;
-  } catch (error) {
-    // Handle error
-  }
-}
-
-function* updateToday(action: any) {
-  try {
-    const getData: AxiosResponse = yield call(getTodayById, action.payload);
-    const id = getData.data[0].id;
-    const response: AxiosResponse = yield call(
-      updateT,
-      `/todo/${id}`,
+      todayServices.updateToday,
       action.payload
     );
-    yield put({ type: TYPE_UPDATE_TODAY, payload: response.data });
+    yield put(updateToday(response.data));
   } catch (error) {}
 }
 
-function* deleteToday(action: any) {
+function* deleteTodaySaga(action: any) {
   try {
-    const getData: AxiosResponse = yield call(getTodayById, action.payload);
-    const id = getData.data[0].id;
     const response: AxiosResponse = yield call(
-      removeT,
-      `/todo/${id}`,
+      todayServices.deleteToday,
       action.payload
     );
-    yield put({ type: TYPE_DELETE_TODAY, payload: response.data });
-    console.log(response.data);
+    yield put(deleteToday(response.data));
   } catch (error) {}
 }
 
-function* changeStatusToday(action: any) {
+function* changeStatusTodaySaga(action: any) {
   try {
-    const getData: AxiosResponse = yield call(getTodayById, action.payload);
-    const id = getData.data[0].id;
     const response: AxiosResponse = yield call(
-      updateT,
-      `/todo/${id}`,
+      todayServices.changeStatusToday,
       action.payload
     );
-    yield put({ type: TYPE_UPDATE_TODAY, payload: response.data });
+    console.log(response.data, "test");
+    yield put(changeStatusToday(response.data));
   } catch (error) {}
 }
+
 function* watchTodays() {
-  yield takeEvery(GET_TODAYS, fetchTodays);
+  yield takeEvery(GET_TODAYS, fetchTodaysSaga);
 }
 
 function* watchAddToday() {
-  yield takeEvery(ADD_TODAY, createToday);
+  yield takeLatest(ADD_TODAY, createTodaySaga);
 }
 
 function* watchUpdateToday() {
-  yield takeEvery(UPDATE_TODAY, updateToday);
+  yield takeLatest(UPDATE_TODAY, updateTodaySaga);
 }
 
 function* watchDeleteToday() {
-  yield takeEvery(DELETE_TODAY, deleteToday);
+  yield takeLatest(DELETE_TODAY, deleteTodaySaga);
 }
 
 function* watchChangeStatusToday() {
-  yield takeEvery(CHANGE_STATUS_TODAY, changeStatusToday);
+  yield takeLatest(CHANGE_STATUS_TODAY, changeStatusTodaySaga);
 }
 
 export const todaySaga = [
