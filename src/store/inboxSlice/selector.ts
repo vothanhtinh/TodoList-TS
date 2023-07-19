@@ -7,3 +7,8 @@ export const selectInboxs = createSelector(
   [selectSlice],
   (state) => state.inboxs
 );
+
+export const selectIsLoadingInbox = createSelector(
+  [selectSlice],
+  (state) => state.isLoading
+);

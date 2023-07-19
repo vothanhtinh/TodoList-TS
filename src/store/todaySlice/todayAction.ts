@@ -1,9 +1,10 @@
 // Action Types
-const GET_TODAYS = "getTodays";
-const ADD_TODAY = "addToday";
-const UPDATE_TODAY = "updateToday";
-const DELETE_TODAY = "deleteToday";
-const CHANGE_STATUS_TODAY = "changeStatusToday";
+const GET_TODAYS = "GET_TODAYS";
+const ADD_TODAY = "ADD_TODAY";
+const UPDATE_TODAY = "UPDATE_TODAY";
+const DELETE_TODAY = "DELETE_TODAY";
+const CHANGE_STATUS_TODAY = "CHANGE_STATUS_TODAY";
+const UPDATE_TODAYS = "UPDATE_TODAYS";
 
 interface Today {
   id?: string;
@@ -13,22 +14,26 @@ interface Today {
   status: number;
 }
 // Action Creators
-const getTodays = () => ({ type: GET_TODAYS });
-const addToday = (newToday: Partial<Today>) => ({
+const getTodaysSaga = () => ({ type: GET_TODAYS });
+const addTodaySaga = (newToday: Partial<Today>) => ({
   type: ADD_TODAY,
   payload: newToday,
 });
-const updateToday = (updatedToday: Partial<Today>) => ({
+const updateTodaySaga = (updatedToday: Partial<Today>) => ({
   type: UPDATE_TODAY,
   payload: updatedToday,
 });
-const deleteToday = (deleteToday: Partial<Today>) => ({
+const deleteTodaySaga = (deleteToday: Partial<Today>) => ({
   type: DELETE_TODAY,
   payload: deleteToday,
 });
-const changeStatusToday = (updatedToday: Partial<Today>) => ({
+const changeStatusTodaySaga = (updatedToday: Partial<Today>) => ({
   type: CHANGE_STATUS_TODAY,
   payload: updatedToday,
+});
+const updateTodaysSaga = (updatedTodays: Partial<Today[]>) => ({
+  type: UPDATE_TODAYS,
+  payload: updatedTodays,
 });
 
 export {
@@ -37,9 +42,11 @@ export {
   CHANGE_STATUS_TODAY,
   DELETE_TODAY,
   ADD_TODAY,
-  getTodays,
-  updateToday,
-  deleteToday,
-  changeStatusToday,
-  addToday,
+  UPDATE_TODAYS,
+  getTodaysSaga,
+  updateTodaySaga,
+  deleteTodaySaga,
+  changeStatusTodaySaga,
+  addTodaySaga,
+  updateTodaysSaga,
 };

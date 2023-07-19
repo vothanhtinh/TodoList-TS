@@ -1,6 +1,5 @@
 // Libraries
 import React, { useState } from "react";
-import AppsIcon from "@mui/icons-material/Apps";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -21,6 +20,7 @@ interface TaskItemProps {
   description: string;
   todayId: string;
   status: number;
+  order: number;
 }
 
 export const TodayItem: React.FC<TaskItemProps> = (props) => {
@@ -55,12 +55,6 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
           onMouseLeave={handleMouseLeave}
         >
           <LeftStyle>
-            <div
-              className={`hide ${isHovered ? "show" : ""}`}
-              style={{ marginLeft: "-32px" }}
-            >
-              <ButtonIcon iconStart={AppsIcon} />
-            </div>
             <Checkbox
               id={id}
               status={status}

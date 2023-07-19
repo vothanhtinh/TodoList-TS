@@ -1,19 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Today {
+export interface Today {
   id?: string;
   todayId: string;
   description: string;
   title: string;
   status: number;
+  order: number;
 }
 
 interface TodayState {
   todays: Today[];
+  isLoading: boolean;
 }
 
 const initialState: TodayState = {
   todays: [],
+  isLoading: false,
 };
 
 const todaySlice = createSlice({
@@ -21,10 +24,13 @@ const todaySlice = createSlice({
   initialState,
   reducers: {
     getTodays: (state, action: PayloadAction<Today[]>) => {
+      state.todays = action.payload?.sort((a, b) => a.order - b.order);
+      state.isLoading = true;
+    },
+    updateTodays: (state, action: PayloadAction<Today[]>) => {
       state.todays = action.payload;
     },
     addToday: (state, action: PayloadAction<Today>) => {
-      console.log("reducer", action);
       state.todays.push(action.payload);
     },
     updateToday: (state, action: PayloadAction<Today>) => {
@@ -61,6 +67,7 @@ export const {
   updateToday,
   deleteToday,
   changeStatusToday,
+  updateTodays,
 } = todaySlice.actions;
 
 export default todaySlice.reducer;

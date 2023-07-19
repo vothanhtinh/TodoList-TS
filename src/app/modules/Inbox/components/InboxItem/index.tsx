@@ -21,6 +21,7 @@ interface TaskItemProps {
   description: string;
   inboxId: string;
   status: number;
+  order?: number;
 }
 
 export const InboxItem: React.FC<TaskItemProps> = (props) => {

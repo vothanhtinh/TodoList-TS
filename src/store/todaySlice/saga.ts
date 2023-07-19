@@ -9,6 +9,7 @@ import {
   DELETE_TODAY,
   GET_TODAYS,
   UPDATE_TODAY,
+  UPDATE_TODAYS,
 } from "store/todaySlice/todayAction";
 import {
   addToday,
@@ -16,6 +17,7 @@ import {
   deleteToday,
   getTodays,
   updateToday,
+  updateTodays,
 } from ".";
 
 // Services
@@ -52,6 +54,15 @@ function* updateTodaySaga(action: any) {
   } catch (error) {}
 }
 
+function* updateTodaysSaga(action: any) {
+  console.log(action);
+  try {
+    yield call(todayServices.updateTodays, action.payload);
+    yield put(getTodays(action.payload));
+    // yield put(updateToday(response.data));
+  } catch (error) {}
+}
+
 function* deleteTodaySaga(action: any) {
   try {
     const response: AxiosResponse = yield call(
@@ -68,7 +79,6 @@ function* changeStatusTodaySaga(action: any) {
       todayServices.changeStatusToday,
       action.payload
     );
-    console.log(response.data, "test");
     yield put(changeStatusToday(response.data));
   } catch (error) {}
 }
@@ -82,7 +92,7 @@ function* watchAddToday() {
 }
 
 function* watchUpdateToday() {
-  yield takeLatest(UPDATE_TODAY, updateTodaySaga);
+  yield takeEvery(UPDATE_TODAY, updateTodaySaga);
 }
 
 function* watchDeleteToday() {
@@ -92,6 +102,9 @@ function* watchDeleteToday() {
 function* watchChangeStatusToday() {
   yield takeLatest(CHANGE_STATUS_TODAY, changeStatusTodaySaga);
 }
+function* watchUpdateTodays() {
+  yield takeLatest(updateTodays, updateTodaysSaga);
+}
 
 export const todaySaga = [
   watchTodays(),
@@ -99,4 +112,5 @@ export const todaySaga = [
   watchUpdateToday(),
   watchDeleteToday(),
   watchChangeStatusToday(),
+  watchUpdateTodays(),
 ];

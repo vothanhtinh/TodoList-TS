@@ -29,7 +29,9 @@ import {
 import { useAppDispatch } from "store/configStore";
 
 // Actions
-import { addToday, updateToday } from "store/todaySlice/todayAction";
+import { addTodaySaga, updateTodaySaga } from "store/todaySlice/todayAction";
+import { useSelector } from "react-redux";
+import { selectTodays } from "store/todaySlice/todaySlice";
 
 interface TaskProps {
   task?: boolean;
@@ -45,9 +47,11 @@ interface TaskProps {
 
 const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
   const dispatch = useAppDispatch();
-
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
+  const todays = useSelector(selectTodays);
+  const maxOrder =
+    todays.length > 0 ? Math.max(...todays.map((today) => today.order)) : 0;
 
   useEffect(() => {
     if (initialTask) {
@@ -83,17 +87,16 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
         status: initialTask.status,
       };
 
-      dispatch(updateToday(updatedToday));
+      dispatch(updateTodaySaga(updatedToday));
     } else {
-      // Add new task
       const newToday = {
         todayId: uuidv4(),
         title: taskName,
         description: description,
         status: 0,
+        order: maxOrder + 1,
       };
-
-      dispatch(addToday(newToday));
+      dispatch(addTodaySaga(newToday));
     }
 
     // Reset the form

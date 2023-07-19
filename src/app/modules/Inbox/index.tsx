@@ -25,11 +25,12 @@ import {
 } from "./styled";
 
 // Store
-import { useAppDispatch } from "store/configStore";
-import { selectInboxs } from "store/inboxSlice/selector";
+import { useAppDispatch, useAppSelector } from "store/configStore";
+import { selectInboxs, selectIsLoadingInbox } from "store/inboxSlice/selector";
 
 // Components
 import { InboxItem } from "app/modules/Inbox/components/InboxItem";
+import Loading from "app/components/atoms/Loading";
 
 import { getInboxs } from "store/inboxSlice/inboxAction";
 
@@ -46,6 +47,8 @@ const Inbox: React.FC = React.memo(() => {
   const inboxs = useSelector(selectInboxs)?.filter(
     (inbox) => inbox.status === 0
   );
+
+  const isLoading = useSelector(selectIsLoadingInbox);
 
   const onClickAddInbox = () => {
     setIsAddTask(true);
@@ -66,16 +69,22 @@ const Inbox: React.FC = React.memo(() => {
             <GroupIcon startIcon={<MoreHoriz />}></GroupIcon>
           </div>
         </InboxTitle>
-        {inboxs.map((inbox) => (
-          <InboxItem
-            key={inbox.inboxId}
-            title={inbox.title}
-            description={inbox.description}
-            status={inbox.status}
-            inboxId={inbox.inboxId}
-            id={inbox.id}
-          />
-        ))}
+        {isLoading ? (
+          inboxs.map((inbox) => (
+            <InboxItem
+              key={inbox.inboxId}
+              title={inbox.title}
+              description={inbox.description}
+              status={inbox.status}
+              inboxId={inbox.inboxId}
+              id={inbox.id}
+              order={inbox.order}
+            />
+          ))
+        ) : (
+          <Loading />
+        )}
+
         <AddTask
           isClickAddTask={isAddTask}
           onClickAddTask={onClickAddInbox}

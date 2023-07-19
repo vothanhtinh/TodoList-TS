@@ -6,14 +6,17 @@ interface Inbox {
   description: string;
   title: string;
   status: number;
+  order: number;
 }
 
 interface InboxState {
   inboxs: Inbox[];
+  isLoading: boolean;
 }
 
 const initialState: InboxState = {
   inboxs: [],
+  isLoading: false,
 };
 
 const inboxSlice = createSlice({
@@ -22,6 +25,7 @@ const inboxSlice = createSlice({
   reducers: {
     getInboxs: (state, action: PayloadAction<Inbox[]>) => {
       state.inboxs = action.payload;
+      state.isLoading = true;
     },
     addInbox: (state, action: PayloadAction<Inbox>) => {
       state.inboxs.push(action.payload);

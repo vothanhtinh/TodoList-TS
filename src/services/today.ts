@@ -56,3 +56,10 @@ export const changeStatusToday = async (data: TCreateTodayData) => {
     console.log(error);
   }
 };
+
+export const updateTodays = async (data: TCreateTodayData[]) => {
+  const results = data.map(async (today) => {
+    await updateToday(today);
+  });
+  return Promise.all(results);
+};

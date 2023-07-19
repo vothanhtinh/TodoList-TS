@@ -2,9 +2,15 @@
 import { CalendarViewDayOutlined } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
+import AppsIcon from "@mui/icons-material/Apps";
 
 // Components
 import EmtyState from "app/components/atoms/EmtyState";
@@ -13,8 +19,10 @@ import { TodayItem } from "app/modules/Today/components/TodayItem";
 
 // Styled
 import {
+  DropButtonStyle,
   GroupIcon,
   InboxTitle,
+  Item,
   StyleInbox,
   TextBottom,
   TextHeader,
@@ -25,28 +33,65 @@ import { selectTodays } from "store/todaySlice/todaySlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // Actions
-import { getTodays } from "store/todaySlice/todayAction";
+import {
+  getTodaysSaga,
+  updateTodaySaga,
+  updateTodaysSaga,
+} from "store/todaySlice/todayAction";
+import * as todaySlice from "store/todaySlice";
+import { ButtonIcon } from "app/components/atoms/ButtonIcon";
+import { Today } from "store/todaySlice";
 
 const ToDay: React.FC = () => {
   const dispatch = useDispatch();
   const [isClickAddTask, setIsClickAddTask] = useState(false);
-
-  useEffect(() => {
-    dispatch(getTodays());
-  }, []);
-
-  // get today from store
   const todays = useSelector(selectTodays)?.filter(
     (today) => today?.status === 0
   );
 
-  const ClickAddToday = () => {
+  const onClickAddToday = () => {
     setIsClickAddTask(true);
   };
-
-  const ClickCancelToday = () => {
+  const onClickCancelToday = () => {
     setIsClickAddTask(false);
   };
+  const handleDragEnd = (result: any) => {
+    const { source, destination } = result;
+
+    // Kiểm tra ngoài phạm vi
+    if (!destination) {
+      return;
+    }
+
+    // Kiểm tra có cùng 1 vị trí hay không
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+    // Thay đổi order của phần tử
+
+    const arrToday = swapIndex(todays, source.index, destination.index);
+    dispatch(todaySlice.updateTodays(arrToday));
+  };
+  const swapIndex = (arr: Today[], startIndex: number, lastIndex: number) => {
+    const newArr = [...arr];
+
+    // Phần tử được kéo
+    const [removed] = newArr.splice(startIndex, 1);
+
+    // Chèn phần tử được kéo vào vị trí mới
+    newArr.splice(lastIndex, 0, removed);
+    return newArr.map((item, index) => ({
+      ...item,
+      order: index + 1,
+    }));
+  };
+
+  useEffect(() => {
+    dispatch(getTodaysSaga());
+  }, []);
 
   return (
     <>
@@ -61,20 +106,54 @@ const ToDay: React.FC = () => {
           </div>
         </InboxTitle>
 
-        {todays.map((today) => (
-          <TodayItem
-            title={today.title}
-            key={today.todayId}
-            todayId={today.todayId}
-            description={today.description}
-            status={today.status}
-            id={today.id}
-          />
-        ))}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="todays">
+            {(provided) => (
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{ padding: 0 }}
+              >
+                {todays.map((today, index) => (
+                  <Draggable
+                    key={today.todayId}
+                    draggableId={today.todayId}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <Item>
+                          <DropButtonStyle>
+                            <ButtonIcon iconStart={AppsIcon} />
+                          </DropButtonStyle>
+                          <TodayItem
+                            title={today.title}
+                            key={today.todayId}
+                            todayId={today.todayId}
+                            description={today.description}
+                            status={today.status}
+                            id={today.id}
+                            order={today.order}
+                          />
+                        </Item>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
+
         <AddTaskToday
           isClickAddTask={isClickAddTask}
-          ClickAddTask={ClickAddToday}
-          ClickCancelTask={ClickCancelToday}
+          onClickAddTask={onClickAddToday}
+          onClickCancelTask={onClickCancelToday}
         />
         {todays.length === 0 && !isClickAddTask && (
           <>
@@ -99,5 +178,4 @@ const ToDay: React.FC = () => {
     </>
   );
 };
-
 export default ToDay;

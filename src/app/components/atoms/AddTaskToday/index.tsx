@@ -11,35 +11,35 @@ import FormAddToday from "app/modules/Today/components/FormAddToday";
 
 interface AddTaskProps {
   isClickAddTask: boolean;
-  ClickAddTask: () => void;
-  ClickCancelTask: () => void;
+  onClickAddTask: () => void;
+  onClickCancelTask: () => void;
 }
 
 const AddTaskToday: React.FC<AddTaskProps> = (props) => {
-  const { isClickAddTask, ClickAddTask, ClickCancelTask } = props;
+  const { isClickAddTask, onClickAddTask, onClickCancelTask } = props;
   const [task, setTask] = useState(false);
 
-  const handleTask = () => {
-    ClickAddTask();
+  const onHandleTask = () => {
+    onClickAddTask();
     setTask(true);
   };
 
-  const handleCancel = () => {
-    ClickCancelTask();
+  const onHandleCancel = () => {
+    onClickCancelTask();
     setTask(false);
   };
 
   return (
     <>
       {!isClickAddTask ? (
-        <StyleButton onClick={handleTask}>
+        <StyleButton onClick={onHandleTask}>
           <StyleIcon>
             <FontAwesomeIcon icon={faPlus} />
           </StyleIcon>
           <Text>Add task</Text>
         </StyleButton>
       ) : (
-        <FormAddToday task={task} onCancel={handleCancel} />
+        <FormAddToday task={task} onCancel={onHandleCancel} />
       )}
     </>
   );

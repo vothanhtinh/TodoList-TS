@@ -7,3 +7,8 @@ export const selectTodays = createSelector(
   [selectSlice],
   (state) => state.todays
 );
+
+export const selectIsLoadingToday = createSelector(
+  [selectSlice],
+  (state) => state.isLoading
+);

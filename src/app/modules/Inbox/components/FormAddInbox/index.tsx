@@ -30,6 +30,8 @@ import { useAppDispatch } from "store/configStore";
 
 //Actions
 import { addInbox, updateInbox } from "store/inboxSlice/inboxAction";
+import { selectInboxs } from "store/inboxSlice/selector";
+import { useSelector } from "react-redux";
 
 interface TaskProps {
   task?: boolean;
@@ -48,8 +50,10 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
 
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
-
   const isAddButtonDisabled = useMemo(() => !taskName.trim(), [taskName]);
+  const inboxs = useSelector(selectInboxs);
+  const maxOrder =
+    inboxs.length > 0 ? Math.max(...inboxs.map((inbox) => inbox.order)) : -1;
 
   useEffect(() => {
     if (initialTask) {
@@ -93,6 +97,7 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
         title: taskName,
         description: description,
         status: 0,
+        order: maxOrder + 1,
       };
 
       dispatch(addInbox(newInbox));
