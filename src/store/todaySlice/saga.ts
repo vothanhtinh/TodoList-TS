@@ -11,13 +11,7 @@ import {
   UPDATE_TODAY,
   UPDATE_TODAYS,
 } from "store/todaySlice/todayAction";
-import {
-  addToday,
-  changeStatusToday,
-  deleteToday,
-  getTodays,
-  updateToday,
-} from ".";
+import { changeStatusToday, getTodays } from ".";
 
 // Services
 import * as todayServices from "services/today";
@@ -33,11 +27,7 @@ function* fetchTodaysSaga() {
 
 function* createTodaySaga(action: any) {
   try {
-    const response: AxiosResponse = yield call(
-      todayServices.createToday,
-      action.payload
-    );
-    yield put(addToday(response.data));
+    yield call(todayServices.createToday, action.payload);
   } catch (error) {
     // Handle error
   }
@@ -45,11 +35,7 @@ function* createTodaySaga(action: any) {
 
 function* updateTodaySaga(action: any) {
   try {
-    const response: AxiosResponse = yield call(
-      todayServices.updateToday,
-      action.payload
-    );
-    yield put(updateToday(response.data));
+    yield call(todayServices.updateToday, action.payload);
   } catch (error) {}
 }
 
@@ -61,11 +47,10 @@ function* updateTodaysSaga(action: any) {
 
 function* deleteTodaySaga(action: any) {
   try {
-    const response: AxiosResponse = yield call(
-      todayServices.deleteToday,
-      action.payload
-    );
-    yield put(deleteToday(response.data));
+    yield call(todayServices.deleteToday, action.payload);
+
+    const response: AxiosResponse = yield call(todayServices.getToday);
+    yield put(getTodays(response.data));
   } catch (error) {}
 }
 

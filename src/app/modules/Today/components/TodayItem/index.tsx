@@ -25,7 +25,7 @@ interface TaskItemProps {
 
 export const TodayItem: React.FC<TaskItemProps> = (props) => {
   const [isEdit, setIsEdit] = useState(true);
-  const { title, description, todayId, status, _id } = props;
+  const { title, description, todayId, status, _id, order } = props;
   const [isShowMore, setIsShowMore] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -61,6 +61,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
               typeId={todayId}
               description={description}
               title={title}
+              order={order}
               type="today"
             />
             <span>{title}</span>
@@ -101,6 +102,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
             description,
             title,
             status,
+            order,
           }}
         />
       )}

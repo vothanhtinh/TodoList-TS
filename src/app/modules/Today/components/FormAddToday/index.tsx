@@ -32,6 +32,7 @@ import { useAppDispatch } from "store/configStore";
 import { addTodaySaga, updateTodaySaga } from "store/todaySlice/todayAction";
 import { useSelector } from "react-redux";
 import { selectTodays } from "store/todaySlice/todaySlice";
+import { addToday, updateToday } from "store/todaySlice";
 
 interface TaskProps {
   task?: boolean;
@@ -42,6 +43,7 @@ interface TaskProps {
     title: string;
     description: string;
     status: number;
+    order: number;
   };
 }
 
@@ -85,8 +87,10 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
         title: taskName,
         description: description,
         status: initialTask.status,
+        order: initialTask.order,
       };
 
+      dispatch(updateToday(updatedToday));
       dispatch(updateTodaySaga(updatedToday));
     } else {
       const newToday = {
@@ -96,6 +100,8 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
         status: 0,
         order: maxOrder + 1,
       };
+
+      dispatch(addToday(newToday));
       dispatch(addTodaySaga(newToday));
     }
 

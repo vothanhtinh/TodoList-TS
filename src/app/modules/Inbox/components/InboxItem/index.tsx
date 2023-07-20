@@ -21,13 +21,13 @@ interface TaskItemProps {
   description: string;
   inboxId: string;
   status: number;
-  order?: number;
+  order: number;
 }
 
 export const InboxItem: React.FC<TaskItemProps> = (props) => {
   const [isEdit, setIsEdit] = useState(true);
   const [isShowMore, setIsShowMore] = useState(false);
-  const { title, description, inboxId, status, _id } = props;
+  const { title, description, inboxId, status, _id, order } = props;
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
@@ -72,6 +72,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
               description={description}
               title={title}
               typeId={inboxId}
+              order={order}
               type="inbox"
             />
             <StyleText>
@@ -101,6 +102,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
                   description={description}
                   status={status}
                   inboxId={inboxId}
+                  order={order}
                 />
               </span>
             )}
@@ -115,6 +117,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
             description,
             title,
             status,
+            order,
           }}
         />
       )}

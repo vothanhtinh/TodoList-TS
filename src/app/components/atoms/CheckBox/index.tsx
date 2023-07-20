@@ -10,6 +10,8 @@ import { useAppDispatch } from "store/configStore";
 // Actions Saga
 import { changeStatusTodaySaga } from "store/todaySlice/todayAction";
 import { changeStatusInboxSaga } from "store/inboxSlice/inboxAction";
+import { updateInbox } from "store/inboxSlice";
+import { updateToday } from "store/todaySlice";
 
 interface CheckBoxProps {
   _id?: string;
@@ -18,6 +20,7 @@ interface CheckBoxProps {
   typeId: string;
   description: string;
   title: string;
+  order: number;
 }
 export const Checkbox: React.FC<CheckBoxProps> = (props) => {
   const dispatch = useAppDispatch();
@@ -27,12 +30,14 @@ export const Checkbox: React.FC<CheckBoxProps> = (props) => {
 
   const ChangeStatus = () => {
     if (type === "inbox") {
+      dispatch(updateInbox({ inboxId, ...props }));
       dispatch(
         changeStatusInboxSaga({ inboxId, status: 1, description, title, _id })
       );
     }
 
     if (type === "today") {
+      dispatch(updateToday({ todayId, ...props }));
       dispatch(
         changeStatusTodaySaga({ todayId, status: 1, description, title, _id })
       );

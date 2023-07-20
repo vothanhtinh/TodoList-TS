@@ -1,9 +1,9 @@
-import { create, remove, get, update } from "./api";
+import { create, remove, get, update, updateMany } from "./api";
 
 const pathUrl = "/inbox/";
 
 type TCreateInboxData = {
-  id?: string;
+  _id?: string;
   inboxId: string;
   title: string;
   description: string;
@@ -31,7 +31,7 @@ export const createInbox = async (data: Partial<TCreateInboxData>) => {
 
 export const updateInbox = async (data: TCreateInboxData) => {
   try {
-    const results = await update(`${pathUrl}${data.id}`, data);
+    const results = await update(`${pathUrl}${data._id}`, data);
     return results;
   } catch (error) {
     console.log(error);
@@ -39,8 +39,10 @@ export const updateInbox = async (data: TCreateInboxData) => {
 };
 
 export const deleteInbox = async (data: TCreateInboxData) => {
+  console.log(data, "data");
+
   try {
-    const results = await remove(`${pathUrl}${data.id}`);
+    const results = await remove(`${pathUrl}${data._id}`);
 
     return results;
   } catch (error) {
@@ -50,7 +52,7 @@ export const deleteInbox = async (data: TCreateInboxData) => {
 
 export const changeStatusInbox = async (data: TCreateInboxData) => {
   try {
-    const results = await update(`${pathUrl}${data.id}`, data);
+    const results = await update(`${pathUrl}${data._id}`, data);
     return results;
   } catch (error) {
     console.log(error);
@@ -58,8 +60,10 @@ export const changeStatusInbox = async (data: TCreateInboxData) => {
 };
 
 export const updateInboxs = async (data: TCreateInboxData[]) => {
-  const results = data.map(async (inbox) => {
-    await updateInbox(inbox);
-  });
-  return Promise.all(results);
+  try {
+    const results = await updateMany(`${pathUrl}`, data);
+    return results;
+  } catch (error) {
+    return error;
+  }
 };

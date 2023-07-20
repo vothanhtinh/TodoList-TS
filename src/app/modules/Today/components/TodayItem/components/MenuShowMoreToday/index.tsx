@@ -20,6 +20,7 @@ import { MenuIconItem } from "app/components/atoms/MenuIconItem";
 // Store
 import { useAppDispatch } from "store/configStore";
 import { deleteTodaySaga } from "store/todaySlice/todayAction";
+import { deleteToday } from "store/todaySlice";
 
 interface TaskItemProps {
   _id?: string;
@@ -34,6 +35,7 @@ export const MenuShowMoreToday: React.FC<TaskItemProps> = (props) => {
 
   const dispatch = useAppDispatch();
   const ClickDeleteToday = () => {
+    dispatch(deleteToday(props));
     dispatch(deleteTodaySaga({ _id }));
   };
 

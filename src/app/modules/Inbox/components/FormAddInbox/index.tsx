@@ -32,6 +32,7 @@ import { useAppDispatch } from "store/configStore";
 import { addInboxSaga, updateInboxSaga } from "store/inboxSlice/inboxAction";
 import { selectInboxs } from "store/inboxSlice/selector";
 import { useSelector } from "react-redux";
+import { addInbox, updateInbox } from "store/inboxSlice";
 
 interface TaskProps {
   task?: boolean;
@@ -42,6 +43,7 @@ interface TaskProps {
     title: string;
     description: string;
     status: number;
+    order: number;
   };
 }
 
@@ -84,8 +86,9 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
         title: taskName,
         description: description,
         status: initialTask.status,
+        order: initialTask.order,
       };
-
+      dispatch(updateInbox(updatedInbox));
       dispatch(updateInboxSaga(updatedInbox));
     } else {
       // Add new task
@@ -96,7 +99,7 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
         status: 0,
         order: maxOrder + 1,
       };
-
+      dispatch(addInbox(newInbox));
       dispatch(addInboxSaga(newInbox));
     }
 
