@@ -56,3 +56,10 @@ export const changeStatusInbox = async (data: TCreateInboxData) => {
     console.log(error);
   }
 };
+
+export const updateInboxs = async (data: TCreateInboxData[]) => {
+  const results = data.map(async (inbox) => {
+    await updateInbox(inbox);
+  });
+  return Promise.all(results);
+};

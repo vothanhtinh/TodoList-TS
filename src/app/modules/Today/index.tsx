@@ -4,17 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import AppsIcon from "@mui/icons-material/Apps";
 
 // Components
 import EmtyState from "app/components/atoms/EmtyState";
 import AddTaskToday from "app/components/atoms/AddTaskToday";
+import { ButtonIcon } from "app/components/atoms/ButtonIcon";
+import Loading from "app/components/atoms/Loading";
 import { TodayItem } from "app/modules/Today/components/TodayItem";
 
 // Styled
@@ -29,18 +26,18 @@ import {
 } from "./styled";
 
 // Store
-import { selectTodays } from "store/todaySlice/todaySlice";
+import {
+  selectIsLoadingToday,
+  selectTodays,
+} from "store/todaySlice/todaySlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // Actions
-import {
-  getTodaysSaga,
-  updateTodaySaga,
-  updateTodaysSaga,
-} from "store/todaySlice/todayAction";
+import { getTodaysSaga, updateTodaysSaga } from "store/todaySlice/todayAction";
 import * as todaySlice from "store/todaySlice";
-import { ButtonIcon } from "app/components/atoms/ButtonIcon";
-import { Today } from "store/todaySlice";
+
+// Utils
+import { swapIndexToday } from "utils";
 
 const ToDay: React.FC = () => {
   const dispatch = useDispatch();
@@ -48,7 +45,7 @@ const ToDay: React.FC = () => {
   const todays = useSelector(selectTodays)?.filter(
     (today) => today?.status === 0
   );
-
+  const isLoading = useSelector(selectIsLoadingToday);
   const onClickAddToday = () => {
     setIsClickAddTask(true);
   };
@@ -70,23 +67,12 @@ const ToDay: React.FC = () => {
     ) {
       return;
     }
+
     // Thay đổi order của phần tử
+    const arrToday = swapIndexToday(todays, source.index, destination.index);
 
-    const arrToday = swapIndex(todays, source.index, destination.index);
     dispatch(todaySlice.updateTodays(arrToday));
-  };
-  const swapIndex = (arr: Today[], startIndex: number, lastIndex: number) => {
-    const newArr = [...arr];
-
-    // Phần tử được kéo
-    const [removed] = newArr.splice(startIndex, 1);
-
-    // Chèn phần tử được kéo vào vị trí mới
-    newArr.splice(lastIndex, 0, removed);
-    return newArr.map((item, index) => ({
-      ...item,
-      order: index + 1,
-    }));
+    dispatch(updateTodaysSaga(arrToday));
   };
 
   useEffect(() => {
@@ -114,36 +100,40 @@ const ToDay: React.FC = () => {
                 ref={provided.innerRef}
                 style={{ padding: 0 }}
               >
-                {todays.map((today, index) => (
-                  <Draggable
-                    key={today.todayId}
-                    draggableId={today.todayId}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <Item>
-                          <DropButtonStyle>
-                            <ButtonIcon iconStart={AppsIcon} />
-                          </DropButtonStyle>
-                          <TodayItem
-                            title={today.title}
-                            key={today.todayId}
-                            todayId={today.todayId}
-                            description={today.description}
-                            status={today.status}
-                            id={today.id}
-                            order={today.order}
-                          />
-                        </Item>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+                {isLoading ? (
+                  todays.map((today, index) => (
+                    <Draggable
+                      key={today.todayId}
+                      draggableId={today.todayId}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <Item>
+                            <DropButtonStyle>
+                              <ButtonIcon iconStart={AppsIcon} />
+                            </DropButtonStyle>
+                            <TodayItem
+                              title={today.title}
+                              key={today.todayId}
+                              todayId={today.todayId}
+                              description={today.description}
+                              status={today.status}
+                              id={today.id}
+                              order={today.order}
+                            />
+                          </Item>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                ) : (
+                  <Loading />
+                )}
                 {provided.placeholder}
               </ul>
             )}

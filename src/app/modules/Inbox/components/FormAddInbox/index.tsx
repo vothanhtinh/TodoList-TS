@@ -28,8 +28,8 @@ import {
 // Store
 import { useAppDispatch } from "store/configStore";
 
-//Actions
-import { addInbox, updateInbox } from "store/inboxSlice/inboxAction";
+//Actions Saga
+import { addInboxSaga, updateInboxSaga } from "store/inboxSlice/inboxAction";
 import { selectInboxs } from "store/inboxSlice/selector";
 import { useSelector } from "react-redux";
 
@@ -49,18 +49,15 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
   const dispatch = useAppDispatch();
 
   const [taskName, setTaskName] = useState("");
+
   const [description, setDescription] = useState("");
+
   const isAddButtonDisabled = useMemo(() => !taskName.trim(), [taskName]);
+
   const inboxs = useSelector(selectInboxs);
+
   const maxOrder =
     inboxs.length > 0 ? Math.max(...inboxs.map((inbox) => inbox.order)) : -1;
-
-  useEffect(() => {
-    if (initialTask) {
-      setTaskName(initialTask.title);
-      setDescription(initialTask.description);
-    }
-  }, [initialTask]);
 
   const handleTaskNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value);
@@ -89,7 +86,7 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
         status: initialTask.status,
       };
 
-      dispatch(updateInbox(updatedInbox));
+      dispatch(updateInboxSaga(updatedInbox));
     } else {
       // Add new task
       const newInbox = {
@@ -100,7 +97,7 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
         order: maxOrder + 1,
       };
 
-      dispatch(addInbox(newInbox));
+      dispatch(addInboxSaga(newInbox));
     }
 
     // Reset the form
@@ -108,6 +105,13 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
     setDescription("");
     onCancelForm();
   };
+
+  useEffect(() => {
+    if (initialTask) {
+      setTaskName(initialTask.title);
+      setDescription(initialTask.description);
+    }
+  }, [initialTask]);
 
   return (
     <FormContainer>

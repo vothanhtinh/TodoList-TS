@@ -19,6 +19,7 @@ import {
   DELETE_INBOX,
   GET_INBOXS,
   UPDATE_INBOX,
+  UPDATE_INBOXS,
 } from "./inboxAction";
 
 function* fetchInboxsSaga() {
@@ -72,6 +73,12 @@ function* changeStatusInboxSaga(action: any) {
   } catch (error) {}
 }
 
+function* updateInboxsSaga(action: any) {
+  try {
+    yield call(inboxServices.updateInboxs, action.payload);
+  } catch (error) {}
+}
+
 function* watchInboxs() {
   yield takeEvery(GET_INBOXS, fetchInboxsSaga);
 }
@@ -81,7 +88,7 @@ function* watchAddInbox() {
 }
 
 function* watchUpdateInbox() {
-  yield takeLatest(UPDATE_INBOX, updateInboxSaga);
+  yield takeEvery(UPDATE_INBOX, updateInboxSaga);
 }
 
 function* watchDeleteInbox() {
@@ -92,10 +99,15 @@ function* watchChangeStatusInbox() {
   yield takeLatest(CHANGE_STATUS_INBOX, changeStatusInboxSaga);
 }
 
+function* watchUpdateInboxs() {
+  yield takeEvery(UPDATE_INBOXS, updateInboxsSaga);
+}
+
 export const inboxSaga = [
   watchInboxs(),
   watchAddInbox(),
   watchUpdateInbox(),
   watchDeleteInbox(),
   watchChangeStatusInbox(),
+  watchUpdateInboxs(),
 ];

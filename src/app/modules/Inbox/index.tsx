@@ -9,6 +9,7 @@ import {
   ChatBubbleOutline,
   MoreHoriz,
 } from "@mui/icons-material";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 // Components
 import AddTask from "app/components/atoms/AddTask";
@@ -32,30 +33,50 @@ import { selectInboxs, selectIsLoadingInbox } from "store/inboxSlice/selector";
 import { InboxItem } from "app/modules/Inbox/components/InboxItem";
 import Loading from "app/components/atoms/Loading";
 
-import { getInboxs } from "store/inboxSlice/inboxAction";
+import { getInboxsSaga, updateInboxsSaga } from "store/inboxSlice/inboxAction";
+import * as inboxSlice from "store/inboxSlice";
+
+// Utils
+import { swapIndexInbox } from "utils";
 
 const Inbox: React.FC = React.memo(() => {
   const dispatch = useAppDispatch();
-
   const [isAddTask, setIsAddTask] = useState(false);
-
-  useEffect(() => {
-    dispatch(getInboxs());
-  }, []);
-
   // get inbox from store
   const inboxs = useSelector(selectInboxs)?.filter(
     (inbox) => inbox.status === 0
   );
-
   const isLoading = useSelector(selectIsLoadingInbox);
-
   const onClickAddInbox = () => {
     setIsAddTask(true);
   };
-
   const onClickCancelInbox = () => {
     setIsAddTask(false);
+  };
+  useEffect(() => {
+    dispatch(getInboxsSaga());
+  }, []);
+
+  const handleDragEnd = (result: any) => {
+    const { source, destination } = result;
+
+    // Kiểm tra ngoài phạm vi
+    if (!destination) {
+      return;
+    }
+
+    // Kiểm tra có cùng 1 vị trí hay không
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    // Thay đổi order của phần tử
+    const arrInbox = swapIndexInbox(inboxs, source.index, destination.index);
+    dispatch(inboxSlice.updateInboxs(arrInbox));
+    dispatch(updateInboxsSaga(arrInbox));
   };
 
   return (
@@ -69,21 +90,48 @@ const Inbox: React.FC = React.memo(() => {
             <GroupIcon startIcon={<MoreHoriz />}></GroupIcon>
           </div>
         </InboxTitle>
-        {isLoading ? (
-          inboxs.map((inbox) => (
-            <InboxItem
-              key={inbox.inboxId}
-              title={inbox.title}
-              description={inbox.description}
-              status={inbox.status}
-              inboxId={inbox.inboxId}
-              id={inbox.id}
-              order={inbox.order}
-            />
-          ))
-        ) : (
-          <Loading />
-        )}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="inbox">
+            {(provided) => (
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{ padding: 0 }}
+              >
+                {isLoading ? (
+                  inboxs.map((inbox, index) => (
+                    <Draggable
+                      key={inbox.inboxId}
+                      draggableId={inbox.inboxId}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <InboxItem
+                            key={inbox.inboxId}
+                            title={inbox.title}
+                            description={inbox.description}
+                            status={inbox.status}
+                            inboxId={inbox.inboxId}
+                            id={inbox.id}
+                            order={inbox.order}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                ) : (
+                  <Loading />
+                )}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
 
         <AddTask
           isClickAddTask={isAddTask}

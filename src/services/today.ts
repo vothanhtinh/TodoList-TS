@@ -23,6 +23,7 @@ export const getToday = async () => {
 export const createToday = async (data: Partial<TCreateTodayData>) => {
   try {
     const results = await create(pathUrl, data);
+
     return results;
   } catch (error) {
     console.log(error);
@@ -32,6 +33,7 @@ export const createToday = async (data: Partial<TCreateTodayData>) => {
 export const updateToday = async (data: TCreateTodayData) => {
   try {
     const results = await update(`${pathUrl}${data.id}`, data);
+
     return results;
   } catch (error) {
     console.log(error);
@@ -51,6 +53,7 @@ export const deleteToday = async (data: TCreateTodayData) => {
 export const changeStatusToday = async (data: TCreateTodayData) => {
   try {
     const results = await update(`${pathUrl}${data.id}`, data);
+
     return results;
   } catch (error) {
     console.log(error);
@@ -61,5 +64,6 @@ export const updateTodays = async (data: TCreateTodayData[]) => {
   const results = data.map(async (today) => {
     await updateToday(today);
   });
+
   return Promise.all(results);
 };

@@ -24,8 +24,12 @@ const inboxSlice = createSlice({
   initialState,
   reducers: {
     getInboxs: (state, action: PayloadAction<Inbox[]>) => {
-      state.inboxs = action.payload;
+      state.inboxs = action.payload?.sort((a, b) => a.order - b.order);
       state.isLoading = true;
+    },
+    updateInboxs: (state, action: PayloadAction<Inbox[]>) => {
+      state.isLoading = true;
+      state.inboxs = action.payload;
     },
     addInbox: (state, action: PayloadAction<Inbox>) => {
       state.inboxs.push(action.payload);
@@ -60,6 +64,7 @@ export const {
   addInbox,
   updateInbox,
   deleteInbox,
+  updateInboxs,
   changeStatusInbox,
 } = inboxSlice.actions;
 export default inboxSlice.reducer;

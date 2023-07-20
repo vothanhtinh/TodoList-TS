@@ -20,7 +20,7 @@ import { MenuIconItem } from "app/components/atoms/MenuIconItem";
 import { useAppDispatch } from "store/configStore";
 
 // Actions
-import { deleteInbox } from "store/inboxSlice/inboxAction";
+import { deleteInboxSaga } from "store/inboxSlice/inboxAction";
 
 interface TaskItemProps {
   id?: string;
@@ -35,7 +35,7 @@ export const MenuShowMoreInbox: React.FC<TaskItemProps> = (props) => {
   const dispatch = useAppDispatch();
 
   const onClickDeleteInbox = () => {
-    dispatch(deleteInbox({ title, description, inboxId, status, id }));
+    dispatch(deleteInboxSaga({ title, description, inboxId, status, id }));
   };
   return (
     <PaperStyle>

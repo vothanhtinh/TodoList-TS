@@ -17,7 +17,6 @@ import {
   deleteToday,
   getTodays,
   updateToday,
-  updateTodays,
 } from ".";
 
 // Services
@@ -102,8 +101,9 @@ function* watchDeleteToday() {
 function* watchChangeStatusToday() {
   yield takeLatest(CHANGE_STATUS_TODAY, changeStatusTodaySaga);
 }
+
 function* watchUpdateTodays() {
-  yield takeLatest(updateTodays, updateTodaysSaga);
+  yield takeLatest(UPDATE_TODAYS, updateTodaysSaga);
 }
 
 export const todaySaga = [
