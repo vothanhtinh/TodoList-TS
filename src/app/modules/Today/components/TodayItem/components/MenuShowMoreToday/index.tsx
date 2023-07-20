@@ -22,7 +22,7 @@ import { useAppDispatch } from "store/configStore";
 import { deleteTodaySaga } from "store/todaySlice/todayAction";
 
 interface TaskItemProps {
-  id?: string;
+  _id?: string;
   title: string;
   description: string;
   todayId: string;
@@ -30,11 +30,11 @@ interface TaskItemProps {
 }
 
 export const MenuShowMoreToday: React.FC<TaskItemProps> = (props) => {
-  const { id } = props;
+  const { _id } = props;
 
   const dispatch = useAppDispatch();
   const ClickDeleteToday = () => {
-    dispatch(deleteTodaySaga({ id }));
+    dispatch(deleteTodaySaga({ _id }));
   };
 
   return (

@@ -9,7 +9,7 @@ const CHANGE_STATUS_INBOX = "CHANGE_STATUS_INBOX";
 const UPDATE_INBOXS = "UPDATE_INBOXS";
 
 export interface Inbox {
-  id?: string;
+  _id?: string;
   inboxId: string;
   title: string;
   description: string;

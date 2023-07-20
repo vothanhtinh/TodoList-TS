@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://64aeb9cac85640541d4d9a77.mockapi.io/api/todos/",
+  baseURL: "http://localhost:3001",
   headers: {
     "Content-Type": "application/json",
   },
@@ -43,4 +43,12 @@ export const remove = <T>(
   config?: AxiosRequestConfig
 ): Promise<AxiosResponse<T>> => {
   return axiosInstance.delete<T>(url, config);
+};
+
+export const updateMany = <T>(
+  url: string,
+  data?: any,
+  config?: AxiosRequestConfig
+): Promise<AxiosResponse<T>> => {
+  return axiosInstance.patch<T>(url, data, config);
 };

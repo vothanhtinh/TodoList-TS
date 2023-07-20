@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Today {
-  id?: string;
+  _id?: string;
   todayId: string;
   description: string;
   title: string;
@@ -34,10 +34,8 @@ const todaySlice = createSlice({
       state.todays.push(action.payload);
     },
     updateToday: (state, action: PayloadAction<Today>) => {
-      const { todayId } = action.payload;
-      const index = state.todays.findIndex(
-        (today) => today.todayId === todayId
-      );
+      const { _id } = action.payload;
+      const index = state.todays.findIndex((today) => today._id === _id);
 
       if (index !== -1) {
         state.todays[index] = action.payload;
@@ -54,6 +52,7 @@ const todaySlice = createSlice({
       }
     },
     deleteToday: (state, action: PayloadAction<Partial<Today>>) => {
+      console.log(action.payload, "delete");
       const { todayId } = action.payload;
 
       state.todays = state.todays.filter((today) => today.todayId !== todayId);

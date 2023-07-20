@@ -123,7 +123,7 @@ const ToDay: React.FC = () => {
                               todayId={today.todayId}
                               description={today.description}
                               status={today.status}
-                              id={today.id}
+                              _id={today._id}
                               order={today.order}
                             />
                           </Item>

@@ -54,11 +54,8 @@ function* updateTodaySaga(action: any) {
 }
 
 function* updateTodaysSaga(action: any) {
-  console.log(action);
   try {
     yield call(todayServices.updateTodays, action.payload);
-    yield put(getTodays(action.payload));
-    // yield put(updateToday(response.data));
   } catch (error) {}
 }
 

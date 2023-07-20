@@ -37,7 +37,7 @@ interface TaskProps {
   task?: boolean;
   onCancelForm: () => void;
   initialTask?: {
-    id?: string;
+    _id?: string;
     inboxId: string;
     title: string;
     description: string;
@@ -79,7 +79,7 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancelForm, initialTask }) => {
     if (initialTask) {
       // Update existing task
       const updatedInbox = {
-        id: initialTask.id,
+        _id: initialTask._id,
         inboxId: initialTask.inboxId,
         title: taskName,
         description: description,

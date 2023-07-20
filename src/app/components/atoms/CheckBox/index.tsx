@@ -12,7 +12,7 @@ import { changeStatusTodaySaga } from "store/todaySlice/todayAction";
 import { changeStatusInboxSaga } from "store/inboxSlice/inboxAction";
 
 interface CheckBoxProps {
-  id?: string;
+  _id?: string;
   status: number;
   type: string;
   typeId: string;
@@ -21,20 +21,20 @@ interface CheckBoxProps {
 }
 export const Checkbox: React.FC<CheckBoxProps> = (props) => {
   const dispatch = useAppDispatch();
-  const { id, type, description, title, typeId } = props;
+  const { _id, type, description, title, typeId } = props;
   const todayId = typeId;
   const inboxId = typeId;
 
   const ChangeStatus = () => {
     if (type === "inbox") {
       dispatch(
-        changeStatusInboxSaga({ inboxId, status: 1, description, title, id })
+        changeStatusInboxSaga({ inboxId, status: 1, description, title, _id })
       );
     }
 
     if (type === "today") {
       dispatch(
-        changeStatusTodaySaga({ todayId, status: 1, description, title, id })
+        changeStatusTodaySaga({ todayId, status: 1, description, title, _id })
       );
     }
   };

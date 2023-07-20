@@ -7,7 +7,7 @@ const CHANGE_STATUS_TODAY = "CHANGE_STATUS_TODAY";
 const UPDATE_TODAYS = "UPDATE_TODAYS";
 
 interface Today {
-  id?: string;
+  _id?: string;
   todayId: string;
   title: string;
   description: string;

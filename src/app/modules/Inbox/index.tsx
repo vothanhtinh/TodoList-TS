@@ -117,7 +117,7 @@ const Inbox: React.FC = React.memo(() => {
                             description={inbox.description}
                             status={inbox.status}
                             inboxId={inbox.inboxId}
-                            id={inbox.id}
+                            _id={inbox._id}
                             order={inbox.order}
                           />
                         </div>

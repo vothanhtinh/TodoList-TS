@@ -23,19 +23,19 @@ import { useAppDispatch } from "store/configStore";
 import { deleteInboxSaga } from "store/inboxSlice/inboxAction";
 
 interface TaskItemProps {
-  id?: string;
+  _id?: string;
   title: string;
   description: string;
   inboxId: string;
   status: number;
 }
 export const MenuShowMoreInbox: React.FC<TaskItemProps> = (props) => {
-  const { title, description, inboxId, status, id } = props;
+  const { title, description, inboxId, status, _id } = props;
 
   const dispatch = useAppDispatch();
 
   const onClickDeleteInbox = () => {
-    dispatch(deleteInboxSaga({ title, description, inboxId, status, id }));
+    dispatch(deleteInboxSaga({ title, description, inboxId, status, _id }));
   };
   return (
     <PaperStyle>

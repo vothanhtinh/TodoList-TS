@@ -1,9 +1,9 @@
-import { create, remove, get, update } from "./api";
+import { create, remove, get, update, updateMany } from "./api";
 
-const pathUrl = "/todo/";
+const pathUrl = "/today/";
 
 type TCreateTodayData = {
-  id?: string;
+  _id?: string;
   todayId: string;
   title: string;
   description: string;
@@ -32,8 +32,7 @@ export const createToday = async (data: Partial<TCreateTodayData>) => {
 
 export const updateToday = async (data: TCreateTodayData) => {
   try {
-    const results = await update(`${pathUrl}${data.id}`, data);
-
+    const results = await update(`${pathUrl}${data._id}`, data);
     return results;
   } catch (error) {
     console.log(error);
@@ -42,7 +41,7 @@ export const updateToday = async (data: TCreateTodayData) => {
 
 export const deleteToday = async (data: TCreateTodayData) => {
   try {
-    const results = await remove(`${pathUrl}${data.id}`);
+    const results = await remove(`${pathUrl}${data._id}`);
 
     return results;
   } catch (error) {
@@ -52,7 +51,7 @@ export const deleteToday = async (data: TCreateTodayData) => {
 
 export const changeStatusToday = async (data: TCreateTodayData) => {
   try {
-    const results = await update(`${pathUrl}${data.id}`, data);
+    const results = await update(`${pathUrl}${data._id}`, data);
 
     return results;
   } catch (error) {
@@ -61,9 +60,7 @@ export const changeStatusToday = async (data: TCreateTodayData) => {
 };
 
 export const updateTodays = async (data: TCreateTodayData[]) => {
-  const results = data.map(async (today) => {
-    await updateToday(today);
-  });
+  const results = await updateMany(`${pathUrl}`, data);
 
-  return Promise.all(results);
+  return results.data;
 };

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface Inbox {
-  id?: string;
+  _id?: string;
   inboxId: string;
   description: string;
   title: string;

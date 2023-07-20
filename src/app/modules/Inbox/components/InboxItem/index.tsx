@@ -16,7 +16,7 @@ import FormAddInbox from "../FormAddInbox";
 import { BlockStyle, LeftStyle, RightStyle, StyleText } from "./styled";
 
 interface TaskItemProps {
-  id?: string;
+  _id?: string;
   title: string;
   description: string;
   inboxId: string;
@@ -27,7 +27,7 @@ interface TaskItemProps {
 export const InboxItem: React.FC<TaskItemProps> = (props) => {
   const [isEdit, setIsEdit] = useState(true);
   const [isShowMore, setIsShowMore] = useState(false);
-  const { title, description, inboxId, status, id } = props;
+  const { title, description, inboxId, status, _id } = props;
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
@@ -67,7 +67,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
               </div>
             )}
             <Checkbox
-              id={id}
+              _id={_id}
               status={status}
               description={description}
               title={title}
@@ -96,7 +96,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
               <span onClick={ClickShowMore}>
                 <ButtonIcon iconStart={MoreHorizIcon} />
                 <MenuShowMoreInbox
-                  id={id}
+                  _id={_id}
                   title={title}
                   description={description}
                   status={status}
@@ -110,7 +110,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
         <FormAddInbox
           onCancelForm={onCancel}
           initialTask={{
-            id,
+            _id,
             inboxId,
             description,
             title,
