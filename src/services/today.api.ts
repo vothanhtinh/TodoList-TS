@@ -1,0 +1,53 @@
+import { TodayType, TodaysType } from "types/today.type";
+import { create, remove, get, update, updateMany } from "./http";
+
+const pathUrl = "/today/";
+
+export const getToday = () => {
+  return get<Array<TodayType>>(pathUrl);
+};
+
+export const createToday = async (data: Partial<TodayType>) => {
+  try {
+    const results = await create(pathUrl, data);
+
+    return results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// export const updateToday = async (data: TCreateTodayData) => {
+//   try {
+//     const results = await update(`${pathUrl}${data._id}`, data);
+//     return results;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// export const deleteToday = async (data: TCreateTodayData) => {
+//   try {
+//     const results = await remove(`${pathUrl}${data._id}`);
+
+//     return results;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// export const changeStatusToday = async (data: TCreateTodayData) => {
+//   try {
+//     const results = await update(`${pathUrl}${data._id}`, data);
+
+//     return results;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// export const updateTodays = async (data: TCreateTodayData[]) => {
+//   const results = await updateMany(`${pathUrl}`, data);
+
+//   return results.data;
+// };

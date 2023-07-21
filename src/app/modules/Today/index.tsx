@@ -2,13 +2,15 @@
 import { CalendarViewDayOutlined } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 // Components
 import EmtyState from "app/components/atoms/EmtyState";
 import AddTaskToday from "app/components/atoms/AddTaskToday";
 import { TodayItem } from "app/modules/Today/components/TodayItem";
+import Loading from "app/components/atoms/Loading";
 
 // Styled
 import {
@@ -19,29 +21,21 @@ import {
   TextHeader,
 } from "./styled";
 
-// Store
-import { selectTodays } from "store/todaySlice/todaySlice";
-import { useSelector } from "react-redux";
-import { getTodays } from "store/todaySlice";
-import { useAppDispatch } from "store/configStore";
+// S
+import { getToday } from "services/today.api";
 
 const ToDay: React.FC = () => {
   const [isClickAddTask, setIsClickAddTask] = useState(false);
-  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(getTodays());
-  }, []);
-
-  // get today from store
-  const todays = useSelector(selectTodays).filter(
-    (today) => today.status === 0
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ["today"],
+    queryFn: getToday,
+    keepPreviousData: true,
+  });
 
   const onClickAddToday = () => {
     setIsClickAddTask(true);
   };
-
   const onClickCancelAddToday = () => {
     setIsClickAddTask(false);
   };
@@ -58,21 +52,32 @@ const ToDay: React.FC = () => {
             <GroupIcon startIcon={<CalendarViewDayOutlined />}>View</GroupIcon>
           </div>
         </InboxTitle>
-        {todays.map((today) => (
-          <TodayItem
-            title={today.title}
-            key={today.id}
-            id={today.id}
-            description={today.description}
-            status={today.status}
-          />
-        ))}
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            {data?.data
+              .filter((today) => today.status === 0)
+              .map((today) => (
+                <TodayItem
+                  todayId={today.todayId}
+                  title={today.title}
+                  key={today._id}
+                  _id={today._id}
+                  description={today.description}
+                  status={today.status}
+                  order={today.order}
+                />
+              ))}
+          </>
+        )}
+
         <AddTaskToday
           isClickAddTask={isClickAddTask}
           onClickAddToday={onClickAddToday}
           onClickCancelToday={onClickCancelAddToday}
         />
-        {todays.length === 0 && !isClickAddTask && (
+        {data?.data.length === 0 && !isClickAddTask && (
           <>
             <EmtyState
               image={

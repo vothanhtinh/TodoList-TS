@@ -16,20 +16,26 @@ import { Provider } from "react-redux";
 
 // Store
 import { store } from "store/configStore";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+const queryClient = new QueryClient();
 function App() {
   return (
-    <Provider store={store}>
-      <HeaderProvider>
-        <Router>
-          <Header />
-          <SideBar />
-          <Main>
-            <Root />
-          </Main>
-        </Router>
-      </HeaderProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <HeaderProvider>
+          <Router>
+            <Header />
+            <SideBar />
+            <Main>
+              <Root />
+            </Main>
+          </Router>
+        </HeaderProvider>
+      </Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

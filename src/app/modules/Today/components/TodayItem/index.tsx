@@ -15,16 +15,12 @@ import FormAddToday from "../FormAddToday";
 import { BlockStyle, LeftStyle, RightStyle } from "./styled";
 import { MenuShowMoreToday } from "./components/MenuShowMoreToday";
 
-interface TaskItemProps {
-  title: string;
-  description: string;
-  id: string;
-  status: number;
-}
+// Type
+import { TodayType } from "types/today.type";
 
-export const TodayItem: React.FC<TaskItemProps> = (props) => {
+export const TodayItem: React.FC<TodayType> = (props) => {
   const [isEdit, setIsEdit] = useState(true);
-  const { title, description, id, status } = props;
+  const { title, description, _id, status, order, todayId } = props;
   const [isShowMore, setIsShowMore] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -58,7 +54,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
               <ButtonIcon iconStart={AppsIcon} />
             </div>
             <Checkbox
-              id={id}
+              _id={_id}
               title={title}
               status={status}
               description={description}
@@ -69,7 +65,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
           <RightStyle className={`hide ${isHovered ? "show" : ""}`}>
             {!isShowMore && (
               <>
-                <span onClick={() => ClickEdit(id)}>
+                <span onClick={() => ClickEdit(_id)}>
                   <ButtonIcon iconStart={BorderColorIcon} />
                 </span>
                 <ButtonIcon iconStart={CalendarTodayIcon} />
@@ -86,7 +82,7 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
                   title={title}
                   description={description}
                   status={status}
-                  id={id}
+                  id={_id}
                 />
               </span>
             )}
@@ -96,10 +92,12 @@ export const TodayItem: React.FC<TaskItemProps> = (props) => {
         <FormAddToday
           onCancel={onCancel}
           initialTask={{
-            id,
+            _id,
             description,
             title,
             status,
+            todayId,
+            order,
           }}
         />
       )}

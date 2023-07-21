@@ -27,6 +27,13 @@ import {
 
 // Store
 import { useAppDispatch } from "store/configStore";
+
+// Actions
+// import { addTodaySaga, updateTodaySaga } from "store/todaySlice/todayAction";
+import { useSelector } from "react-redux";
+import { selectTodays } from "store/todaySlice/todaySlice";
+import { useMutation } from "react-query";
+import { createToday } from "services/today.api";
 import { addToday } from "store/todaySlice";
 // import { addToday, updateToday } from "store/todaySlice";
 
@@ -34,10 +41,12 @@ interface TaskProps {
   task?: boolean;
   onCancel: () => void;
   initialTask?: {
-    id: string;
+    _id?: string;
+    todayId: string;
     title: string;
     description: string;
     status: number;
+    order: number;
   };
 }
 
@@ -45,7 +54,13 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
   const dispatch = useAppDispatch();
 
   const [taskName, setTaskName] = useState("");
+
   const [description, setDescription] = useState("");
+
+  const todays = useSelector(selectTodays);
+
+  const maxOrder =
+    todays.length > 0 ? Math.max(...todays.map((today) => today.status)) : 0;
 
   useEffect(() => {
     if (initialTask) {
@@ -70,27 +85,37 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
     onCancel();
   };
 
+  const mutation = useMutation({
+    mutationFn: createToday,
+  });
+
   const handleAddTask = () => {
     if (initialTask) {
       // Update existing task
       const updatedToday = {
-        id: initialTask.id,
+        _id: initialTask._id,
+        todayId: initialTask.todayId,
         title: taskName,
         description: description,
         status: initialTask.status,
+        order: initialTask.order,
       };
 
       // dispatch(updateToday(updatedToday));
+      // dispatch(updateTodaySaga(updatedToday));
     } else {
-      // Add new task
       const newToday = {
-        id: uuidv4(),
+        todayId: uuidv4(),
         title: taskName,
         description: description,
         status: 0,
+        order: maxOrder + 1,
       };
 
-      dispatch(addToday(newToday));
+      // dispatch(addTodaySaga(newToday));
+      // dispatch(addToday(newToday));
+
+      mutation.mutate(newToday);
     }
 
     // Reset the form

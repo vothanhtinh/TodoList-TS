@@ -18,14 +18,16 @@ import { BlockStyle, LeftStyle, RightStyle, StyleText } from "./styled";
 interface TaskItemProps {
   title: string;
   description: string;
-  id: string;
+  _id: string;
   status: number;
+  inboxId: string;
+  order: number;
 }
 
 export const InboxItem: React.FC<TaskItemProps> = (props) => {
   const [isEdit, setIsEdit] = useState(true);
   const [isShowMore, setIsShowMore] = useState(false);
-  const { title, description, id, status } = props;
+  const { title, description, _id, status, order, inboxId } = props;
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
@@ -65,7 +67,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
               </div>
             )}
             <Checkbox
-              id={id}
+              _id={_id}
               title={title}
               status={status}
               description={description}
@@ -79,7 +81,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
           <RightStyle className={`hide ${isHovered ? "show" : ""}`}>
             {!isShowMore && (
               <>
-                <span onClick={() => ClickEdit(id)}>
+                <span onClick={() => ClickEdit(_id)}>
                   <ButtonIcon iconStart={BorderColorIcon} />
                 </span>
                 <ButtonIcon iconStart={CalendarTodayIcon} />
@@ -96,7 +98,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
                   title={title}
                   description={description}
                   status={status}
-                  id={id}
+                  id={_id}
                 />
               </span>
             )}
@@ -106,10 +108,12 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
         <FormAddInbox
           onCancel={onCancel}
           initialTask={{
-            id,
+            _id,
             description,
             title,
             status,
+            order,
+            inboxId,
           }}
         />
       )}

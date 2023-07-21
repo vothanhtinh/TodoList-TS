@@ -1,59 +1,64 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { createAsyncThunk } from "@reduxjs/toolkit";
-
-interface Today {
-  id: string;
-  description: string;
-  title: string;
-  status: number;
-}
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TodayType } from "types/today.type";
 
 interface TodayState {
-  todays: Today[];
+  todays: TodayType[];
+  isLoading: boolean;
 }
 
 const initialState: TodayState = {
   todays: [],
+  isLoading: false,
 };
 
-export const todaySlice = createSlice({
+const todaySlice = createSlice({
   name: "today",
   initialState,
-  reducers: {},
-  extraReducers(builder) {
-    builder
-      .addCase(getTodays.fulfilled, (state, action) => {
-        state.todays = action.payload;
-      })
-      .addCase(addToday.fulfilled, (state, action) => {
-        state.todays.push(action.payload);
-      });
+  reducers: {
+    getTodays: (state, action: PayloadAction<TodayType[]>) => {
+      state.todays = action.payload?.sort((a, b) => a.order - b.order);
+      state.isLoading = true;
+    },
+    updateTodays: (state, action: PayloadAction<TodayType[]>) => {
+      state.todays = action.payload;
+    },
+    addToday: (state, action: PayloadAction<TodayType>) => {
+      state.todays.push(action.payload);
+    },
+    updateToday: (state, action: PayloadAction<TodayType>) => {
+      const { _id } = action.payload;
+      const index = state.todays.findIndex((today) => today._id === _id);
+
+      if (index !== -1) {
+        state.todays[index] = action.payload;
+      }
+    },
+    changeStatusToday: (state, action: PayloadAction<TodayType>) => {
+      const { todayId } = action.payload;
+      const index = state.todays.findIndex(
+        (today) => today.todayId === todayId
+      );
+
+      if (index !== -1) {
+        state.todays[index].status = 1;
+      }
+    },
+    deleteToday: (state, action: PayloadAction<Partial<TodayType>>) => {
+      console.log(action.payload, "delete");
+      const { todayId } = action.payload;
+
+      state.todays = state.todays.filter((today) => today.todayId !== todayId);
+    },
   },
 });
 
-export const getTodays = createAsyncThunk("getToday", async () => {
-  const res = await fetch(
-    "https://64aeb9cac85640541d4d9a77.mockapi.io/api/todos/todo"
-  );
-  const data = await res.json();
-  console.log(data);
-  return data;
-});
+export const {
+  getTodays,
+  addToday,
+  updateToday,
+  deleteToday,
+  changeStatusToday,
+  updateTodays,
+} = todaySlice.actions;
 
-export const addToday = createAsyncThunk(
-  "addToday",
-  async (newToday: Today) => {
-    const res = await fetch(
-      "https://64aeb9cac85640541d4d9a77.mockapi.io/api/todos/todo",
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify(newToday),
-      }
-    );
-    const data = await res.json();
-    return data;
-  }
-);
+export default todaySlice.reducer;

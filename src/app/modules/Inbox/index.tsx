@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 import {
   CalendarViewDayOutlined,
   ChatBubbleOutline,
@@ -15,7 +15,7 @@ import AddTask from "app/components/atoms/AddTask";
 import AddSection from "app/components/atoms/AddSection";
 import EmtyState from "app/components/atoms/EmtyState";
 
-//
+// Styled
 import {
   GroupIcon,
   InboxTitle,
@@ -24,17 +24,15 @@ import {
   TextHeader,
 } from "./styled";
 
-// Store
-import { selectInboxs } from "store/inboxSlice/selector";
+// Services
+import { getInbox } from "services/inbox.api";
 
 // Components
 import { InboxItem } from "app/modules/Inbox/components/InboxItem";
+import Loading from "app/components/atoms/Loading";
 
 const Inbox: React.FC = React.memo(() => {
   const [isAddTask, setIsAddTask] = useState(false);
-
-  // get inbox from store
-  const inboxs = useSelector(selectInboxs);
 
   const onClickAdd = () => {
     setIsAddTask(true);
@@ -44,6 +42,11 @@ const Inbox: React.FC = React.memo(() => {
     setIsAddTask(false);
   };
 
+  const { data, isLoading } = useQuery({
+    queryKey: ["inbox"],
+    queryFn: getInbox,
+    keepPreviousData: true,
+  });
   return (
     <>
       <StyleInbox>
@@ -55,22 +58,28 @@ const Inbox: React.FC = React.memo(() => {
             <GroupIcon startIcon={<MoreHoriz />}></GroupIcon>
           </div>
         </InboxTitle>
-        {inboxs.map((inbox) => (
-          <InboxItem
-            key={inbox.id}
-            title={inbox.title}
-            description={inbox.description}
-            status={inbox.status}
-            id={inbox.id}
-          />
-        ))}
+        {isLoading ? (
+          <Loading />
+        ) : (
+          data?.data.map((inbox) => (
+            <InboxItem
+              inboxId={inbox.inboxId}
+              title={inbox.title}
+              key={inbox._id}
+              _id={inbox._id}
+              description={inbox.description}
+              status={inbox.status}
+              order={inbox.order}
+            />
+          ))
+        )}
         <AddTask
           clickAddTask={isAddTask}
           onClickAdd={onClickAdd}
           onClickCancel={onClickCancel}
         />
         <AddSection />
-        {inboxs.length === 0 && !isAddTask && (
+        {data?.data.length === 0 && !isAddTask && (
           <>
             <EmtyState
               image={

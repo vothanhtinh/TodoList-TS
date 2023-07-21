@@ -3,7 +3,8 @@ import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 
 //reducer
 import inboxSlice from "./inboxSlice/index";
-import { todaySlice } from "./todaySlice";
+import todaySlice from "./todaySlice";
+
 // Định nghĩa RootState để sử dụng trong useSelector
 export type RootState = ReturnType<typeof store.getState>;
 
@@ -15,6 +16,6 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export const store = configureStore({
   reducer: {
     inboxReducer: inboxSlice,
-    todayReducer: todaySlice.reducer,
+    todayReducer: todaySlice,
   },
 });

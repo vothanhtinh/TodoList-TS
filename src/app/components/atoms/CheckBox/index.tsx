@@ -14,10 +14,10 @@ interface CheckBoxProps {
   status: number;
   description: string;
   type: string;
-  id: string;
+  _id: string;
 }
 export const Checkbox: React.FC<CheckBoxProps> = (props) => {
-  const { id, title, status, description, type } = props;
+  const { _id, title, status, description, type } = props;
   const dispatch = useAppDispatch();
   const ChangeStatus = () => {
     if (type === "inbox") {
