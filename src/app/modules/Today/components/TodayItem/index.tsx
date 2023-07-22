@@ -82,7 +82,9 @@ export const TodayItem: React.FC<TodayType> = (props) => {
                   title={title}
                   description={description}
                   status={status}
-                  id={_id}
+                  _id={_id}
+                  todayId={todayId}
+                  order={order}
                 />
               </span>
             )}

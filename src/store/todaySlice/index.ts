@@ -16,7 +16,7 @@ const todaySlice = createSlice({
   initialState,
   reducers: {
     getTodays: (state, action: PayloadAction<TodayType[]>) => {
-      state.todays = action.payload?.sort((a, b) => a.order - b.order);
+      state.todays = [...action.payload]?.sort((a, b) => a.order - b.order);
       state.isLoading = true;
     },
     updateTodays: (state, action: PayloadAction<TodayType[]>) => {

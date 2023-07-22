@@ -1,0 +1,4 @@
+export const QUERY_KEYS = {
+  GET_TODAYS: "GET_TODAYS",
+  UPDATE_TODAY: "UPDATE_TODAY",
+};

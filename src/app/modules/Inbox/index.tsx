@@ -46,6 +46,7 @@ const Inbox: React.FC = React.memo(() => {
     queryKey: ["inbox"],
     queryFn: getInbox,
     keepPreviousData: true,
+    staleTime: 5 * 1000,
   });
   return (
     <>
