@@ -71,6 +71,8 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
               title={title}
               status={status}
               description={description}
+              order={order}
+              typeId={inboxId}
               type="inbox"
             />
             <StyleText>
@@ -94,12 +96,7 @@ export const InboxItem: React.FC<TaskItemProps> = (props) => {
             {isShowMore && (
               <span onClick={ClickShowMore}>
                 <ButtonIcon iconStart={MoreHorizIcon} />
-                <MenuShowMoreInbox
-                  title={title}
-                  description={description}
-                  status={status}
-                  id={_id}
-                />
+                <MenuShowMoreInbox _id={_id} />
               </span>
             )}
           </RightStyle>

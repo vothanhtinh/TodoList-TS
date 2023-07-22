@@ -7,7 +7,7 @@ export interface InboxType {
   order: number;
 }
 
-export type TodaysType = Pick<
+export type InboxsType = Pick<
   InboxType,
   "_id" | "inboxId" | "title" | "description" | "order" | "status"
 >[];

@@ -37,18 +37,8 @@ export const deleteToday = async (data: Partial<TodayType>) => {
   }
 };
 
-// export const changeStatusToday = async (data: TCreateTodayData) => {
-//   try {
-//     const results = await update(`${pathUrl}${data._id}`, data);
+export const updateTodays = async (data: TodayType[]) => {
+  const results = await updateMany(`${pathUrl}`, data);
 
-//     return results;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export const updateTodays = async (data: TCreateTodayData[]) => {
-//   const results = await updateMany(`${pathUrl}`, data);
-
-//   return results.data;
-// };
+  return results.data;
+};

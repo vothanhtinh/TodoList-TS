@@ -24,14 +24,19 @@ import {
   TextHeader,
 } from "./styled";
 
-// Services
-import { getInbox } from "services/inbox.api";
-
 // Components
 import { InboxItem } from "app/modules/Inbox/components/InboxItem";
 import Loading from "app/components/atoms/Loading";
 
+// Queries
+import { useGetDataInbox, useUpdateInboxs } from "app/queries/Inbox";
+import { swapIndexInbox } from "utils";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+
 const Inbox: React.FC = React.memo(() => {
+  const { data, isLoading } = useGetDataInbox();
+  const mutation = useUpdateInboxs();
+
   const [isAddTask, setIsAddTask] = useState(false);
 
   const onClickAdd = () => {
@@ -42,12 +47,35 @@ const Inbox: React.FC = React.memo(() => {
     setIsAddTask(false);
   };
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["inbox"],
-    queryFn: getInbox,
-    keepPreviousData: true,
-    staleTime: 5 * 1000,
-  });
+  const inboxs = data
+    ?.sort((a, b) => a.order - b.order)
+    ?.filter((inbox) => inbox.status === 0);
+
+  const handleDragEnd = (result: any) => {
+    const { source, destination } = result;
+
+    // Kiểm tra ngoài phạm vi
+    if (!destination) {
+      return;
+    }
+
+    // Kiểm tra có cùng 1 vị trí hay không
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    // Thay đổi order của phần tử
+    const arrInbox = swapIndexInbox(
+      inboxs || [],
+      source.index,
+      destination.index
+    );
+    mutation.mutate(arrInbox);
+  };
+
   return (
     <>
       <StyleInbox>
@@ -59,28 +87,55 @@ const Inbox: React.FC = React.memo(() => {
             <GroupIcon startIcon={<MoreHoriz />}></GroupIcon>
           </div>
         </InboxTitle>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          data?.data.map((inbox) => (
-            <InboxItem
-              inboxId={inbox.inboxId}
-              title={inbox.title}
-              key={inbox._id}
-              _id={inbox._id}
-              description={inbox.description}
-              status={inbox.status}
-              order={inbox.order}
-            />
-          ))
-        )}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="inboxs">
+            {(provided) => (
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{ padding: 0 }}
+              >
+                {!isLoading ? (
+                  inboxs?.map((inbox, index) => (
+                    <Draggable
+                      key={inbox.inboxId}
+                      draggableId={inbox.inboxId}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <InboxItem
+                            key={inbox.inboxId}
+                            title={inbox.title}
+                            description={inbox.description}
+                            status={inbox.status}
+                            inboxId={inbox.inboxId}
+                            _id={inbox._id}
+                            order={inbox.order}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                ) : (
+                  <Loading />
+                )}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
         <AddTask
           clickAddTask={isAddTask}
           onClickAdd={onClickAdd}
           onClickCancel={onClickCancel}
         />
         <AddSection />
-        {data?.data.length === 0 && !isAddTask && (
+        {inboxs?.length === 0 && !isAddTask && (
           <>
             <EmtyState
               image={

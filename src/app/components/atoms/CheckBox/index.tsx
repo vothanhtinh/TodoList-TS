@@ -4,10 +4,9 @@ import React from "react";
 // Styled
 import { CheckboxLable } from "./styled";
 
-//Store
-import { useAppDispatch } from "store/configStore";
-import { changeStatusInbox } from "store/inboxSlice";
-// import { changeStatusToday } from "store/todaySlice";
+// Queries
+import { useUpdateToday } from "app/queries/Today";
+import { useUpdateInbox } from "app/queries/Inbox";
 
 interface CheckBoxProps {
   title: string;
@@ -15,16 +14,35 @@ interface CheckBoxProps {
   description: string;
   type: string;
   _id: string;
+  order: number;
+  typeId: string;
 }
+
 export const Checkbox: React.FC<CheckBoxProps> = (props) => {
-  const { _id, title, status, description, type } = props;
-  const dispatch = useAppDispatch();
+  const { _id, title, status, description, type, typeId, order } = props;
+
+  const mutationToday = useUpdateToday();
+  const mutationInbox = useUpdateInbox();
   const ChangeStatus = () => {
     if (type === "inbox") {
-      // dispatch(changeStatusInbox({ id, title, status, description }));
+      mutationInbox.mutate({
+        _id,
+        title,
+        status: 1,
+        order,
+        description,
+        inboxId: typeId,
+      });
     }
     if (type === "today") {
-      // dispatch(changeStatusToday({ id, title, status, description }));
+      mutationToday.mutate({
+        _id,
+        title,
+        status: 1,
+        todayId: typeId,
+        description,
+        order,
+      });
     }
   };
 

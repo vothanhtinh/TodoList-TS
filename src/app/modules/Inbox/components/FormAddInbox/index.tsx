@@ -25,9 +25,12 @@ import {
   StyleButton,
 } from "./styled";
 
-// Store
-import { useAppDispatch } from "store/configStore";
-import { addInbox, updateInbox } from "store/inboxSlice";
+// Queries
+import {
+  useAddInbox,
+  useGetDataInbox,
+  useUpdateInbox,
+} from "app/queries/Inbox";
 
 interface TaskProps {
   task?: boolean;
@@ -43,7 +46,14 @@ interface TaskProps {
 }
 
 const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
-  const dispatch = useAppDispatch();
+  const { data } = useGetDataInbox();
+  const mutationAdd = useAddInbox();
+  const mutationUpdate = useUpdateInbox();
+
+  const maxOrder =
+    data && data?.length > 0
+      ? Math.max(...data?.map((inbox) => inbox.order))
+      : 0;
 
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -76,24 +86,25 @@ const FormAddToday: React.FC<TaskProps> = ({ onCancel, initialTask }) => {
   const handleAddTask = () => {
     if (initialTask) {
       // Update existing task
-      const updatedToday = {
-        id: initialTask._id,
+      const updateInbox = {
+        _id: initialTask._id,
         title: taskName,
         description: description,
         status: initialTask.status,
+        order: initialTask.order,
+        inboxId: initialTask.inboxId,
       };
-
-      // dispatch(updateInbox(updatedToday));
+      mutationUpdate.mutate(updateInbox);
     } else {
       // Add new task
       const newinbox = {
-        id: uuidv4(),
+        inboxId: uuidv4(),
         title: taskName,
         description: description,
         status: 0,
+        order: maxOrder + 1,
       };
-
-      // dispatch(addInbox(newinbox));
+      mutationAdd.mutate(newinbox);
     }
 
     // Reset the form

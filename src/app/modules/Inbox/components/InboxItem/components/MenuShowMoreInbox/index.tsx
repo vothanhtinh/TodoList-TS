@@ -16,23 +16,19 @@ import ExtensionOutlinedIcon from "@mui/icons-material/ExtensionOutlined";
 import { MenuDeleteStyle, PaperStyle } from "./styled";
 import { MenuIconItem } from "app/components/atoms/MenuIconItem";
 
-// Store
-import { useAppDispatch } from "store/configStore";
-import { deleteInbox } from "store/inboxSlice";
+// Queries
+import { useDeleteInbox } from "app/queries/Inbox";
 
 interface TaskItemProps {
-  title: string;
-  description: string;
-  id: string;
-  status: number;
+  _id: string;
 }
+
 export const MenuShowMoreInbox: React.FC<TaskItemProps> = (props) => {
-  const { title, description, id, status } = props;
+  const { _id } = props;
 
-  const dispatch = useAppDispatch();
-
+  const mutation = useDeleteInbox();
   const onClickDeleteInbox = () => {
-    dispatch(deleteInbox({ title, description, id, status }));
+    mutation.mutate({ _id });
   };
   return (
     <PaperStyle>

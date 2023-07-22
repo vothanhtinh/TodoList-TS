@@ -1,6 +1,13 @@
+// Libraries
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+// Constants
 import { QUERY_KEYS } from "constants/queries";
+
+// Services
 import { deleteToday } from "services/today.api";
+
+// Types
 import { TodayType } from "types/today.type";
 
 export const useDeleteToday = () => {

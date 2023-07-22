@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 // Components
 import EmtyState from "app/components/atoms/EmtyState";
@@ -21,10 +22,14 @@ import {
 } from "./styled";
 
 // Queries
-import { useGetDataToday } from "app/queries/Today";
+import { useGetDataToday, useUpdateTodays } from "app/queries/Today";
+
+// Utils
+import { swapIndexToday } from "utils";
 
 const ToDay: React.FC = () => {
   const { data, isLoading } = useGetDataToday();
+  const mutation = useUpdateTodays();
 
   const todays = data
     ?.sort((a, b) => a.order - b.order)
@@ -39,6 +44,32 @@ const ToDay: React.FC = () => {
     setIsClickAddTask(false);
   };
 
+  const handleDragEnd = (result: any) => {
+    const { source, destination } = result;
+
+    // Kiểm tra ngoài phạm vi
+    if (!destination) {
+      return;
+    }
+
+    // Kiểm tra có cùng 1 vị trí hay không
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+
+    // Thay đổi order của phần tử
+    const arrToday = swapIndexToday(
+      todays || [],
+      source.index,
+      destination.index
+    );
+
+    mutation.mutate(arrToday);
+  };
+
   return (
     <>
       <StyleInbox>
@@ -51,29 +82,54 @@ const ToDay: React.FC = () => {
             <GroupIcon startIcon={<CalendarViewDayOutlined />}>View</GroupIcon>
           </div>
         </InboxTitle>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            {todays?.map((today) => (
-              <TodayItem
-                todayId={today.todayId}
-                title={today.title}
-                key={today._id}
-                _id={today._id}
-                description={today.description}
-                status={today.status}
-                order={today.order}
-              />
-            ))}
-            <AddTaskToday
-              isClickAddTask={isClickAddTask}
-              onClickAddToday={onClickAddToday}
-              onClickCancelToday={onClickCancelAddToday}
-            />
-          </>
-        )}
-        {data?.length === 0 && !isClickAddTask && (
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="todays">
+            {(provided) => (
+              <ul
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={{ padding: 0 }}
+              >
+                {!isLoading ? (
+                  todays?.map((today, index) => (
+                    <Draggable
+                      key={today.todayId}
+                      draggableId={today.todayId}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <TodayItem
+                            title={today.title}
+                            key={today.todayId}
+                            todayId={today.todayId}
+                            description={today.description}
+                            status={today.status}
+                            _id={today._id}
+                            order={today.order}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                ) : (
+                  <Loading />
+                )}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <AddTaskToday
+          isClickAddTask={isClickAddTask}
+          onClickAddToday={onClickAddToday}
+          onClickCancelToday={onClickCancelAddToday}
+        />
+        {todays?.length === 0 && !isClickAddTask && (
           <>
             <EmtyState
               image={

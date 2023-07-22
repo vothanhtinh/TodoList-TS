@@ -1,6 +1,13 @@
+// Libraries
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+
+// Constants
 import { QUERY_KEYS } from "constants/queries";
+
+// Services
 import { createToday } from "services/today.api";
+
+// Types
 import { TodayType, TodaysType } from "types/today.type";
 
 export const useAddToday = () => {

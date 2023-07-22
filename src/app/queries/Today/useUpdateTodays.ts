@@ -5,16 +5,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEYS } from "constants/queries";
 
 // Services
-import { updateToday } from "services/today.api";
+import { updateTodays } from "services/today.api";
 
-// Types
+// Typessrc/app/queries/Today/useUpdateTodays.ts
 import { TodayType, TodaysType } from "types/today.type";
 
-export const useUpdateToday = () => {
+export const useUpdateTodays = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (today: TodayType) => updateToday(today),
-    onMutate: async (today: TodayType) => {
+    mutationFn: (todays: TodayType[]) => updateTodays(todays),
+    onMutate: async (todays: TodayType[]) => {
       await queryClient.cancelQueries({ queryKey: [QUERY_KEYS.GET_TODAYS] });
 
       const previousTodays: any = queryClient.getQueryData<TodaysType>([
@@ -22,13 +22,13 @@ export const useUpdateToday = () => {
       ]);
 
       // Update the TodaysType data in the cache
-      queryClient.setQueryData<TodaysType>(
+      queryClient.setQueryData<TodaysType[]>(
         [QUERY_KEYS.GET_TODAYS],
         (oldData: any) => {
-          if (oldData) {
-            const dataUpdate = oldData?.data?.map((item: TodayType) =>
-              item._id === today._id ? { ...item, ...today } : item
-            );
+          if (oldData.data) {
+            const dataUpdate = [...todays];
+            console.log(dataUpdate, "data update");
+
             return dataUpdate;
           }
           return oldData.data;

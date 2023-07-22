@@ -5,12 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "constants/queries";
 
 // Services
-import { getToday } from "services/today.api";
+import { getInboxs } from "services/inbox.api";
 
-export const useGetDataToday = () => {
+export const useGetDataInbox = () => {
   const { data, isLoading } = useQuery({
-    queryKey: [QUERY_KEYS.GET_TODAYS],
-    queryFn: getToday,
+    queryKey: [QUERY_KEYS.GET_INBOXS],
+    queryFn: getInboxs,
     keepPreviousData: true,
     staleTime: 5 * 1000,
   });
