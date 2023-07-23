@@ -14,5 +14,5 @@ export const useGetDataToday = () => {
     keepPreviousData: true,
     staleTime: 5 * 1000,
   });
-  return { data: data?.data, isLoading };
+  return { data: data, isLoading };
 };

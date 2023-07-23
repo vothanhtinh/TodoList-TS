@@ -1,5 +1,6 @@
 // Libraries
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 // Constants
 import { QUERY_KEYS } from "constants/queries";
@@ -16,6 +17,7 @@ export const useDeleteToday = () => {
     mutationFn: async (today: Partial<TodayType>) => await deleteToday(today),
     onMutate: (today: Partial<TodayType>) => {},
     onSuccess: () => {
+      toast.success("Xóa thành công");
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_TODAYS] });
     },
   });

@@ -3,8 +3,11 @@ import { create, remove, get, update, updateMany } from "./http";
 
 const pathUrl = "/inbox/";
 
-export const getInboxs = () => {
-  return get<Array<InboxType>>(pathUrl);
+export const getInboxs = async () => {
+  const results = await get<Array<InboxType>>(pathUrl);
+
+  console.log(results.data, "fetch data");
+  return results.data;
 };
 
 export const createInbox = async (data: Partial<InboxType>) => {

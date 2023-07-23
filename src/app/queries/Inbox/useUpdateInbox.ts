@@ -1,5 +1,6 @@
 // Libraries
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 // Constants
 import { QUERY_KEYS } from "constants/queries";
@@ -26,18 +27,20 @@ export const useUpdateInbox = () => {
         [QUERY_KEYS.GET_INBOXS],
         (oldData: any) => {
           if (oldData) {
-            const dataUpdate = oldData?.data?.map((item: InboxType) =>
+            const dataUpdate = oldData?.map((item: InboxType) =>
               item._id === inbox._id ? { ...item, ...inbox } : item
             );
             return dataUpdate;
           }
-          return oldData.data;
+          return oldData;
         }
       );
 
       return { previousInboxs };
     },
     onSuccess: () => {
+      toast.success("Cập nhật thông tin thành công");
+
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_INBOXS] });
     },
   });

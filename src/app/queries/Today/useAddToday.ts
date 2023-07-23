@@ -1,5 +1,6 @@
 // Libraries
 import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 // Constants
 import { QUERY_KEYS } from "constants/queries";
@@ -22,13 +23,18 @@ export const useAddToday = () => {
         QUERY_KEYS.GET_TODAYS,
       ]);
 
-      queryClient.setQueryData(
-        [QUERY_KEYS.GET_TODAYS],
-        [...previousTodays.data, newToday]
-      );
+      queryClient.setQueryData([QUERY_KEYS.GET_TODAYS], (old: any) => [
+        ...old,
+        newToday,
+      ]);
+
       return { previousTodays };
     },
     onSuccess: () => {
+      toast.success("Thêm thành công");
+    },
+
+    onSettled: () => {
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_TODAYS] });
     },

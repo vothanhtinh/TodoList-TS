@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+
 import {
   CalendarViewDayOutlined,
   ChatBubbleOutline,
@@ -30,8 +31,9 @@ import Loading from "app/components/atoms/Loading";
 
 // Queries
 import { useGetDataInbox, useUpdateInboxs } from "app/queries/Inbox";
+
+// Utils
 import { swapIndexInbox } from "utils";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const Inbox: React.FC = React.memo(() => {
   const { data, isLoading } = useGetDataInbox();

@@ -3,16 +3,16 @@ import { create, remove, get, update, updateMany } from "./http";
 
 const pathUrl = "/today/";
 
-export const getToday = () => {
-  const results = get<Array<TodayType>>(pathUrl);
-  return results;
+export const getToday = async () => {
+  const results = await get<Array<TodayType>>(pathUrl);
+  return results.data;
 };
 
 export const createToday = async (data: Partial<TodayType>) => {
   try {
     const results = await create(pathUrl, data);
 
-    return results;
+    return results.data;
   } catch (error) {
     console.log(error);
   }
@@ -31,7 +31,7 @@ export const deleteToday = async (data: Partial<TodayType>) => {
   try {
     const results = await remove(`${pathUrl}${data._id}`);
 
-    return results;
+    return results.data;
   } catch (error) {
     console.log(error);
   }

@@ -1,6 +1,10 @@
 // Libaries
 import "./App.css";
 import { BrowserRouter as Router } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 // Components
 import { Header } from "./app/components/organisms/Header";
@@ -16,8 +20,6 @@ import { Provider } from "react-redux";
 
 // Store
 import { store } from "store/configStore";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 // Turn off fresh data onFocus
 const queryClient = new QueryClient({
@@ -38,6 +40,7 @@ function App() {
             <SideBar />
             <Main>
               <Root />
+              <ToastContainer autoClose={3000} />
             </Main>
           </Router>
         </HeaderProvider>
