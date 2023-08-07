@@ -25,13 +25,13 @@ export const useUpdateTodays = () => {
       queryClient.setQueryData<TodaysType[]>(
         [QUERY_KEYS.GET_TODAYS],
         (oldData: any) => {
-          if (oldData.data) {
+          if (oldData) {
             const dataUpdate = [...todays];
             console.log(dataUpdate, "data update");
 
             return dataUpdate;
           }
-          return oldData.data;
+          return oldData;
         }
       );
 

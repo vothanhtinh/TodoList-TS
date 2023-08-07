@@ -66,7 +66,6 @@ const ToDay: React.FC = () => {
       source.index,
       destination.index
     );
-
     mutation.mutate(arrToday);
   };
 

@@ -32,7 +32,7 @@ export const useUpdateToday = () => {
             );
             return dataUpdate;
           }
-          return oldData.data;
+          return oldData;
         }
       );
 
