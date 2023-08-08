@@ -1,5 +1,5 @@
 // Libraries
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import AppsIcon from "@mui/icons-material/Apps";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -17,9 +17,23 @@ import { MenuShowMoreToday } from "./components/MenuShowMoreToday";
 
 // Type
 import { TodayType } from "types/today.type";
+import { useDrag, useDrop } from "react-dnd";
+import { swapIndexToday } from "utils";
+import { useGetDataToday, useUpdateTodays } from "app/queries/Today";
+import AddBlockEmpty from "app/components/organisms/components/AddBlockEmpty";
 
 export const TodayItem: React.FC<TodayType> = (props) => {
+  const { data } = useGetDataToday();
+  const mutation = useUpdateTodays();
+
   const [isEdit, setIsEdit] = useState(true);
+  const [showArea, setShowArea] = useState({
+    top: false,
+    bottom: false,
+  });
+
+  const ref = useRef<any>(null);
+
   const { title, description, _id, status, order, todayId } = props;
   const [isShowMore, setIsShowMore] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -42,56 +56,122 @@ export const TodayItem: React.FC<TodayType> = (props) => {
   const ClickShowMore = () => {
     setIsShowMore(!isShowMore);
   };
+  // React DND
+
+  const [{ isDragging }, drag] = useDrag({
+    type: "TODAY",
+    item: () => {
+      return { _id, order };
+    },
+    collect: (monitor) => {
+      return {
+        isDragging: !!monitor.isDragging(),
+      };
+    },
+  });
+
+  const [{ handlerId }, drop] = useDrop({
+    accept: "TODAY",
+
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    drop(item: any, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const startIndex = item.order;
+      const lastIndex = order;
+      if (startIndex === lastIndex) {
+        return;
+      }
+
+      if (data) {
+        const newArr = swapIndexToday(data, startIndex, lastIndex);
+        mutation.mutate(newArr);
+      }
+    },
+    // hover: (item: any, monitor) => {
+    //   const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+    //   const hoverMiddleY =
+    //     (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+    //   const mouseOffset = monitor.getClientOffset();
+
+    //   if (!mouseOffset?.y) return;
+
+    //   const hoverClientY = mouseOffset.y - hoverBoundingRect.top;
+    //   setShowArea({
+    //     top: hoverClientY < hoverMiddleY,
+    //     bottom: hoverClientY > hoverMiddleY,
+    //   });
+    //   console.log(showArea);
+    // },
+  });
+
+  drag(drop(ref));
+
   return (
     <div>
       {isEdit ? (
-        <BlockStyle
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <LeftStyle>
-            <div className={`hide ${isHovered ? "show" : ""}`}>
-              <ButtonIcon iconStart={AppsIcon} />
-            </div>
-            <Checkbox
-              _id={_id}
-              title={title}
-              status={status}
-              description={description}
-              typeId={todayId}
-              order={order}
-              type="today"
-            />
-            <span>{title}</span>
-          </LeftStyle>
-          <RightStyle className={`hide ${isHovered ? "show" : ""}`}>
-            {!isShowMore && (
-              <>
-                <span onClick={() => ClickEdit(_id)}>
-                  <ButtonIcon iconStart={BorderColorIcon} />
-                </span>
-                <ButtonIcon iconStart={CalendarTodayIcon} />
-                <ButtonIcon iconStart={ChatBubbleOutlineIcon} />
+        <>
+          <BlockStyle
+            ref={ref}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <LeftStyle>
+              {!isShowMore && (
+                <div
+                  className={`hide ${isHovered ? "show" : ""}`}
+                  style={{ marginLeft: "-30px" }}
+                >
+                  <ButtonIcon iconStart={AppsIcon} />
+                </div>
+              )}
+              <Checkbox
+                _id={_id}
+                title={title}
+                status={status}
+                description={description}
+                typeId={todayId}
+                order={order}
+                type="today"
+              />
+              <span>{title}</span>
+            </LeftStyle>
+            <RightStyle className={`hide ${isHovered ? "show" : ""}`}>
+              {!isShowMore && (
+                <>
+                  <span onClick={() => ClickEdit(_id)}>
+                    <ButtonIcon iconStart={BorderColorIcon} />
+                  </span>
+                  <ButtonIcon iconStart={CalendarTodayIcon} />
+                  <ButtonIcon iconStart={ChatBubbleOutlineIcon} />
+                  <span onClick={ClickShowMore}>
+                    <ButtonIcon iconStart={MoreHorizIcon} />
+                  </span>
+                </>
+              )}
+              {isShowMore && (
                 <span onClick={ClickShowMore}>
                   <ButtonIcon iconStart={MoreHorizIcon} />
+                  <MenuShowMoreToday
+                    title={title}
+                    description={description}
+                    status={status}
+                    _id={_id}
+                    todayId={todayId}
+                    order={order}
+                  />
                 </span>
-              </>
-            )}
-            {isShowMore && (
-              <span onClick={ClickShowMore}>
-                <ButtonIcon iconStart={MoreHorizIcon} />
-                <MenuShowMoreToday
-                  title={title}
-                  description={description}
-                  status={status}
-                  _id={_id}
-                  todayId={todayId}
-                  order={order}
-                />
-              </span>
-            )}
-          </RightStyle>
-        </BlockStyle>
+              )}
+            </RightStyle>
+          </BlockStyle>
+        </>
       ) : (
         <FormAddToday
           onCancel={onCancel}

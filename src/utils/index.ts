@@ -26,13 +26,13 @@ export const swapIndexToday = (
 ) => {
   const newArr = [...arr];
 
-  // Phần tử được kéo
-  const [removed] = newArr.splice(startIndex, 1);
+  const startIndexInArr = newArr.findIndex((item) => item.order === startIndex);
+  const lastIndexInArr = newArr.findIndex((item) => item.order === lastIndex);
+  if (startIndexInArr !== -1 && lastIndexInArr !== -1) {
+    const temp = newArr[startIndexInArr].order;
+    newArr[startIndexInArr].order = newArr[lastIndexInArr].order;
+    newArr[lastIndexInArr].order = temp;
+  }
 
-  // Chèn phần tử được kéo vào vị trí mới
-  newArr.splice(lastIndex, 0, removed);
-  return newArr.map((item, index) => ({
-    ...item,
-    order: index + 1,
-  }));
+  return newArr;
 };

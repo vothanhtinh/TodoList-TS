@@ -27,7 +27,6 @@ export const useUpdateTodays = () => {
         (oldData: any) => {
           if (oldData) {
             const dataUpdate = [...todays];
-            console.log(dataUpdate, "data update");
 
             return dataUpdate;
           }

@@ -6,7 +6,6 @@ export const BlockStyle = styled.div`
   display: flex;
   justify-content: space-between;
   height: 35px;
-  margin-bottom: 10px;
   border-bottom: 1px solid #ddd;
   padding: 10px 0;
 
