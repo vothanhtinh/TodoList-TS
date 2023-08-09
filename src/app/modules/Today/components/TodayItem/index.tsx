@@ -27,6 +27,7 @@ export const TodayItem: React.FC<TodayType> = (props) => {
   const mutation = useUpdateTodays();
 
   const [isEdit, setIsEdit] = useState(true);
+
   const [showArea, setShowArea] = useState({
     top: false,
     bottom: false,
@@ -34,7 +35,7 @@ export const TodayItem: React.FC<TodayType> = (props) => {
 
   const ref = useRef<any>(null);
 
-  const { title, description, _id, status, order, todayId } = props;
+  const { title, description, _id, status, order, todayId, index } = props;
   const [isShowMore, setIsShowMore] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -70,15 +71,56 @@ export const TodayItem: React.FC<TodayType> = (props) => {
     },
   });
 
-  const [{ handlerId }, drop] = useDrop({
+  const [{ isOverDropWrapper }, drop] = useDrop({
     accept: "TODAY",
 
     collect(monitor) {
       return {
-        handlerId: monitor.getHandlerId(),
+        isOverDropWrapper: monitor.isOver(),
       };
     },
     drop(item: any, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const startIndex = item.order;
+      const lastIndex = order;
+      if (startIndex === lastIndex) {
+        return;
+      }
+
+      setShowArea({
+        top: false,
+        bottom: false,
+      });
+    },
+    hover: (item: any, monitor) => {
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      const mouseOffset = monitor.getClientOffset();
+
+      if (!mouseOffset?.y) return;
+
+      const hoverClientY = mouseOffset.y - hoverBoundingRect.top;
+
+      setShowArea({
+        top: hoverClientY < hoverMiddleY,
+        bottom: hoverClientY > hoverMiddleY,
+      });
+    },
+  });
+
+  const [{ isOverTopBlockEmpty }, emptyTopDrop] = useDrop({
+    accept: "TODAY",
+    collect(monitor) {
+      return {
+        isOverTopBlockEmpty: monitor.isOver(),
+      };
+    },
+    drop: (item: any, monitor) => {
       if (!ref.current) {
         return;
       }
@@ -92,32 +134,52 @@ export const TodayItem: React.FC<TodayType> = (props) => {
         const newArr = swapIndexToday(data, startIndex, lastIndex);
         mutation.mutate(newArr);
       }
+      setShowArea({
+        top: false,
+        bottom: false,
+      });
     },
-    // hover: (item: any, monitor) => {
-    //   const hoverBoundingRect = ref.current?.getBoundingClientRect();
+  });
 
-    //   const hoverMiddleY =
-    //     (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+  const [{ isOverBottomBlockEmpty }, emptyBottomDrop] = useDrop({
+    accept: "TODAY",
+    collect(monitor) {
+      return {
+        isOverBottomBlockEmpty: monitor.isOver(),
+      };
+    },
 
-    //   const mouseOffset = monitor.getClientOffset();
+    drop: (item: any, monitor) => {
+      if (!ref.current) {
+        return;
+      }
+      const startIndex = item.order;
+      const lastIndex = order;
+      if (startIndex === lastIndex) {
+        return;
+      }
 
-    //   if (!mouseOffset?.y) return;
-
-    //   const hoverClientY = mouseOffset.y - hoverBoundingRect.top;
-    //   setShowArea({
-    //     top: hoverClientY < hoverMiddleY,
-    //     bottom: hoverClientY > hoverMiddleY,
-    //   });
-    //   console.log(showArea);
-    // },
+      if (data) {
+        console.log("bottom");
+        const newArr = swapIndexToday(data, startIndex, lastIndex + 1);
+        mutation.mutate(newArr);
+      }
+      setShowArea({
+        top: false,
+        bottom: false,
+      });
+    },
   });
 
   drag(drop(ref));
 
+  const isRenderTopEmpty =
+    (showArea.top && index === 0 && isOverDropWrapper) || isOverTopBlockEmpty;
   return (
     <div>
       {isEdit ? (
         <>
+          <AddBlockEmpty isShow={isRenderTopEmpty} ref={emptyTopDrop} />
           <BlockStyle
             ref={ref}
             onMouseEnter={handleMouseEnter}
@@ -171,6 +233,12 @@ export const TodayItem: React.FC<TodayType> = (props) => {
               )}
             </RightStyle>
           </BlockStyle>
+          <AddBlockEmpty
+            isShow={
+              (isOverDropWrapper && showArea.bottom) || isOverBottomBlockEmpty
+            }
+            ref={emptyBottomDrop}
+          />
         </>
       ) : (
         <FormAddToday

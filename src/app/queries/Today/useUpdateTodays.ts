@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Constants
 import { QUERY_KEYS } from "constants/queries";
+import { toast } from "react-toastify";
 
 // Services
 import { updateTodays } from "services/today.api";
@@ -37,6 +38,7 @@ export const useUpdateTodays = () => {
       return { previousTodays };
     },
     onSuccess: () => {
+      toast.success("Cập nhật thành công");
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.GET_TODAYS] });
     },
   });

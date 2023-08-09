@@ -5,6 +5,7 @@ export interface TodayType {
   description: string;
   status: number;
   order: number;
+  index?: number;
 }
 
 export type TodaysType = Pick<

@@ -32,8 +32,6 @@ const ToDay: React.FC = () => {
     ?.sort((a, b) => a.order - b.order)
     ?.filter((today) => today.status === 0);
 
-  console.log({ data, todays });
-
   const [isClickAddTask, setIsClickAddTask] = useState(false);
 
   const onClickAddToday = () => {
@@ -66,6 +64,7 @@ const ToDay: React.FC = () => {
                 status={today.status}
                 _id={today._id}
                 order={today.order}
+                index={index}
               />
             ))
           ) : (
