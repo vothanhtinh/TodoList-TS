@@ -46,9 +46,11 @@ export const swapIndexToday = (
 
   // // Chèn phần tử được kéo vào vị trí mới
   newArr.splice(lastIndexInArr, 0, removed);
-  // console.log(newArr, "test");
-  return newArr.map((item, index) => ({
-    ...item,
-    order: index + 1,
-  }));
+
+  for (let i = lastIndexInArr; i < newArr.length; i++) {
+    console.log(i);
+    newArr[i] = { ...newArr[i], order: i + 1 };
+  }
+
+  return newArr;
 };
