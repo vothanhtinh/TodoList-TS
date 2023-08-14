@@ -11,7 +11,7 @@ export const Text = styled.span`
 export const StyleIcon = styled.span`
   border-radius: 50%;
   color: #db4c3f;
-  padding: 3px;
+  padding: 3px 6px;
   margin-right: 5px;
   font-size: 14px;
   text-align: center;
@@ -24,7 +24,7 @@ export const StyleButton = styled.button`
   outline: none;
   background: none;
   border: none;
-  padding: 5px 5px;
+  padding: 6px 0 0 5px;
   &:hover ${Text} {
     color: #db4c3f;
   }

@@ -8,7 +8,7 @@ export const StyleItem = styled.div`
   margin: 0;
   font-size: 14px;
   color: #808080;
-  height: 28px;
+  height: 35px;
   &:hover {
     background-color: #eee;
     border-radius: 5px;
