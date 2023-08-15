@@ -6,8 +6,8 @@ export const BlockStyle = styled.div`
   display: flex;
   justify-content: space-between;
   height: 35px;
-  margin-bottom: 10px;
   border-bottom: 1px solid #ddd;
+  background: #ffffff;
   padding: 10px 0;
 
   .hide {
@@ -20,9 +20,6 @@ export const BlockStyle = styled.div`
 
   &:hover {
     cursor: pointer;
-    .hide {
-      display: none;
-    }
 
     .show {
       display: block;

@@ -2,6 +2,25 @@
 import { Button } from "@mui/material";
 import { styled } from "styled-components";
 
+export const DropButtonStyle = styled.div`
+  position: absolute;
+  left: -6px;
+  top: 15px;
+  display: none;
+  &:hover {
+    display: block !important;
+  }
+`;
+export const Item = styled.li`
+  margin-left: -30px;
+  padding-left: 30px;
+  list-style-type: none;
+  position: relative;
+  &:hover ${DropButtonStyle} {
+    display: block;
+  }
+`;
+
 export const StyleInbox = styled.div`
   padding: 40px 40px 40px 0px;
   margin: 0 auto;

@@ -1,10 +1,10 @@
 // Libraries
 import React, { useState } from "react";
-import AppsIcon from "@mui/icons-material/Apps";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { CSS } from "@dnd-kit/utilities";
 
 // Components
 import { ButtonIcon } from "app/components/atoms/ButtonIcon";
@@ -17,6 +17,7 @@ import { MenuShowMoreToday } from "./components/MenuShowMoreToday";
 
 // Type
 import { TodayType } from "types/today.type";
+import { useSortable } from "@dnd-kit/sortable";
 
 export const TodayItem: React.FC<TodayType> = (props) => {
   const [isEdit, setIsEdit] = useState(true);
@@ -39,20 +40,39 @@ export const TodayItem: React.FC<TodayType> = (props) => {
   const onCancel = () => {
     setIsEdit(true);
   };
+
   const ClickShowMore = () => {
     setIsShowMore(!isShowMore);
   };
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: props._id });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : undefined,
+    boxShadow: isDragging ? "0px 0px 2px 1px #ccc" : undefined,
+  };
+
   return (
     <div>
       {isEdit ? (
         <BlockStyle
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
         >
           <LeftStyle>
-            <div className={`hide ${isHovered ? "show" : ""}`}>
-              <ButtonIcon iconStart={AppsIcon} />
-            </div>
             <Checkbox
               _id={_id}
               title={title}

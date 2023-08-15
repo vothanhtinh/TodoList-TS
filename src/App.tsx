@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
+import { DndContext } from "@dnd-kit/core";
 // Components
 import { Header } from "./app/components/organisms/Header";
 import { SideBar } from "./app/components/organisms/SideBar";
