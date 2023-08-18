@@ -3,6 +3,7 @@ import { ROUTER } from "constants/routers";
 // Modules
 import ToDay from "./Today";
 import Inbox from "./Inbox";
+import Project from "./Project";
 
 export const routes = [
   {
@@ -22,5 +23,11 @@ export const routes = [
     path: ROUTER.INBOX.path,
     name: ROUTER.INBOX.name,
     element: <Inbox />,
+  },
+  {
+    key: ROUTER.PROJECT.key,
+    path: ROUTER.PROJECT.path,
+    name: ROUTER.PROJECT.name,
+    element: <Project />,
   },
 ];

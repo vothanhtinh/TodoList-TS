@@ -14,4 +14,9 @@ export const ROUTER = {
     name: "Home",
     path: "/",
   },
+  PROJECT: {
+    key: "project",
+    name: "Project",
+    path: "/project",
+  },
 };

@@ -17,7 +17,7 @@ interface HeaderProviderProps {
 }
 
 export const HeaderProvider: React.FC<HeaderProviderProps> = ({ children }) => {
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
 
   return (
     <HeaderContext.Provider value={{ active, setActive }}>
