@@ -4,6 +4,7 @@ import { ROUTER } from "constants/routers";
 import ToDay from "./Today";
 import Inbox from "./Inbox";
 import Project from "./Project";
+import Examples from "./Examples";
 
 export const routes = [
   {
@@ -29,5 +30,12 @@ export const routes = [
     path: ROUTER.PROJECT.path,
     name: ROUTER.PROJECT.name,
     element: <Project />,
+  },
+
+  {
+    key: ROUTER.EXAMPLES.key,
+    path: ROUTER.EXAMPLES.path,
+    name: ROUTER.EXAMPLES.name,
+    element: <Examples />,
   },
 ];
