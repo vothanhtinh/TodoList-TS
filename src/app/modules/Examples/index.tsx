@@ -17,7 +17,7 @@ import Item from "./Item";
 import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 
 const draftData = Array.from({ length: 100000 }).map((_, index) => ({
-  id: index + 1,
+  id: `id ${index}`,
   title: `Todo ${index + 1}`,
   descritpion: `Test Todo ${index + 1}`,
 }));
